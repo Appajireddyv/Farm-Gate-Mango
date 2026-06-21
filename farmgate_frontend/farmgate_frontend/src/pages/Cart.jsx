@@ -55,7 +55,7 @@ export default function Cart() {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '2rem', alignItems: 'start' }}>
+      <div className="cart-layout">
         {/* Cart items */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {cart.map(({ product, qty }) => (
@@ -81,7 +81,7 @@ export default function Cart() {
         </div>
 
         {/* Summary */}
-        <div className="card" style={{ position: 'sticky', top: '80px' }}>
+        <div className="card cart-summary">
           <div className="card-body">
             <h3 style={{ marginBottom: '1.2rem', fontWeight: 700 }}>Order Summary</h3>
             {cart.map(({ product, qty }) => (

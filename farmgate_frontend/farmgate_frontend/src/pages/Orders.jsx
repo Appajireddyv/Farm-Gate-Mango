@@ -78,7 +78,7 @@ export function OrderDetail() {
     <div className="container section">
       <div className="breadcrumb"><Link to="/orders">My Orders</Link> / Order #{order.id}</div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: '2rem', alignItems: 'start' }}>
+      <div className="order-detail-layout">
         <div>
           {/* Status tracker */}
           {order.status !== 'cancelled' && (

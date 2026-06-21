@@ -22,7 +22,7 @@ export default function Home() {
         <p className="hero-subtitle">
           Buy directly from farmers across India. No brokers, no commissions — just pure, fresh mangoes at honest prices.
         </p>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div className="hero-actions">
           <Link to="/products" className="btn btn-amber" style={{ fontSize: '1rem', padding: '0.8rem 2rem' }}>
             Shop Fresh Mangoes 🥭
           </Link>

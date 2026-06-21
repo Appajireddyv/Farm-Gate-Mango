@@ -51,10 +51,10 @@ export default function ProductDetail() {
         <Link to="/">Home</Link> / <Link to="/products">Shop</Link> / {product.name}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'start' }}>
+      <div className="product-detail-grid">
         {/* Image */}
         <div>
-          <div style={{ background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', borderRadius: '20px', height: '380px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '8rem', overflow: 'hidden' }}>
+          <div className="product-image-card" style={{ background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', height: '380px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '8rem', overflow: 'hidden' }}>
             {product.image
               ? <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               : '🥭'
@@ -97,7 +97,7 @@ export default function ProductDetail() {
 
           {/* Qty picker */}
           {product.stock > 0 && (
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <div className="product-detail-actions" style={{ marginBottom: '1.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', border: '2px solid #e5e7eb', borderRadius: '50px', overflow: 'hidden' }}>
                 <button onClick={() => setQty(q => Math.max(product.min_order_qty, q - 1))} style={{ padding: '0.6rem 1rem', border: 'none', background: 'none', cursor: 'pointer', fontSize: '1.2rem' }}><Minus size={16} /></button>
                 <span style={{ padding: '0 1rem', fontWeight: 700, fontSize: '1.1rem' }}>{qty}</span>

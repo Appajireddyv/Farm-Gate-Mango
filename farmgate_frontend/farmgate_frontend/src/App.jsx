@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -21,6 +22,14 @@ function ProtectedRoute({ children, role }) {
 }
 
 export default function App() {
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShowBackToTop(window.scrollY > 400);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <AuthProvider>
       <CartProvider>
@@ -41,6 +50,16 @@ export default function App() {
             <Route path="/farmer/products/add" element={<ProtectedRoute role="farmer"><AddProduct /></ProtectedRoute>} />
             <Route path="/farmer/products/edit/:id" element={<ProtectedRoute role="farmer"><AddProduct /></ProtectedRoute>} />
           </Routes>
+          {showBackToTop && (
+            <button
+              type="button"
+              className="back-to-top"
+              aria-label="Scroll to top"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
+              ↑ Top
+            </button>
+          )}
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>

@@ -86,7 +86,7 @@ export function Register() {
           <h2 className="display-font" style={{ fontSize: '1.8rem' }}>Join FarmGate</h2>
           <p style={{ color: '#6b7280' }}>Connect directly, no middlemen</p>
         </div>
-        <div style={{ display: 'flex', gap: '0', marginBottom: '1.5rem', background: '#f3f4f6', borderRadius: '50px', padding: '4px' }}>
+        <div className="button-group" style={{ marginBottom: '1.5rem', background: '#f3f4f6', borderRadius: '50px', padding: '4px' }}>
           {['customer', 'farmer'].map(r => (
             <button key={r} type="button" onClick={() => setForm({ ...form, role: r })}
               style={{ flex: 1, padding: '0.5rem', borderRadius: '50px', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem',
@@ -97,7 +97,7 @@ export function Register() {
         </div>
         {error && <div style={{ background: '#fee2e2', color: '#991b1b', padding: '0.8rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.88rem' }}>{error}</div>}
         <form onSubmit={handle}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="form-grid-2">
             <div className="form-group"><label className="form-label">First Name</label><input className="form-control" value={form.first_name} onChange={set('first_name')} placeholder="Raju" required /></div>
             <div className="form-group"><label className="form-label">Last Name</label><input className="form-control" value={form.last_name} onChange={set('last_name')} placeholder="Patil" required /></div>
           </div>
@@ -105,7 +105,7 @@ export function Register() {
           <div className="form-group"><label className="form-label">Email</label><input className="form-control" type="email" value={form.email} onChange={set('email')} placeholder="raju@farm.com" required /></div>
           <div className="form-group"><label className="form-label">Phone</label><input className="form-control" value={form.phone} onChange={set('phone')} placeholder="9876543210" /></div>
           {form.role === 'farmer' && <>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div className="form-grid-2">
               <div className="form-group"><label className="form-label">Village</label><input className="form-control" value={form.village} onChange={set('village')} placeholder="Devgad" /></div>
               <div className="form-group"><label className="form-label">District</label><input className="form-control" value={form.district} onChange={set('district')} placeholder="Sindhudurg" /></div>
             </div>

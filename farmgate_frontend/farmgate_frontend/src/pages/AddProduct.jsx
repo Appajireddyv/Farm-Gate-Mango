@@ -50,7 +50,7 @@ export default function AddProduct() {
               <label className="form-label">Product Name *</label>
               <input className="form-control" value={form.name} onChange={set('name')} placeholder="e.g. Alphonso Mangoes Premium" required />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div className="form-grid-2">
               <div className="form-group">
                 <label className="form-label">Category *</label>
                 <select className="form-select" value={form.category} onChange={set('category')}>
@@ -64,7 +64,7 @@ export default function AddProduct() {
                 </select>
               </div>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+            <div className="form-grid-3">
               <div className="form-group">
                 <label className="form-label">Price (₹) *</label>
                 <input className="form-control" type="number" value={form.price_per_unit} onChange={set('price_per_unit')} placeholder="450" required min={1} />
@@ -86,7 +86,7 @@ export default function AddProduct() {
               <label className="form-label">Harvest Date</label>
               <input className="form-control" type="date" value={form.harvest_date} onChange={set('harvest_date')} />
             </div>
-            <div style={{ display: 'flex', gap: '2rem', marginBottom: '1.5rem' }}>
+            <div className="button-group" style={{ marginBottom: '1.5rem' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 600 }}>
                 <input type="checkbox" checked={form.is_organic} onChange={set('is_organic')} />
                 🌱 Organic
@@ -96,7 +96,7 @@ export default function AddProduct() {
                 Available for sale
               </label>
             </div>
-            <div style={{ display: 'flex', gap: '1rem' }}>
+            <div className="button-group">
               <button type="button" className="btn btn-secondary" onClick={() => navigate('/farmer/dashboard')}>Cancel</button>
               <button className="btn btn-primary" style={{ flex: 1 }} disabled={loading}>{loading ? 'Saving...' : isEdit ? '✓ Update Product' : '🥭 List Product'}</button>
             </div>
