@@ -22,7 +22,9 @@ export default function Navbar() {
         {menuOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
       <div className={`nav-links${menuOpen ? ' open' : ''}`}>
-        <Link to="/products" onClick={() => setMenuOpen(false)}>Shop</Link>
+        {(!user || user.role === 'customer') && (
+          <Link to="/products" onClick={() => setMenuOpen(false)}>Shop</Link>
+        )}
         {!user && <>
           <Link to="/login" className="hide-mobile" onClick={() => setMenuOpen(false)}>Login</Link>
           <Link to="/register" className="btn btn-primary btn-sm" onClick={() => setMenuOpen(false)}>Join Free</Link>
