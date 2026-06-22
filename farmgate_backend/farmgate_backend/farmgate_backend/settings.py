@@ -5,7 +5,9 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-farmgate-mango-direct-2026'
 DEBUG = True
-ALLOWED_HOSTS =  ['farmgate-backend.onrender.com']
+ALLOWED_HOSTS =  ['farmgate-backend.onrender.com'
+'localhost'
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',

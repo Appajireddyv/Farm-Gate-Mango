@@ -8,6 +8,18 @@ API.interceptors.request.use(config => {
   return config;
 });
 
+API.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response) {
+      console.error('API response error:', error.response.status, error.response.data);
+    } else {
+      console.error('API error:', error.message);
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const authAPI = {
   register: (data) => API.post('/auth/register/', data),
   login: (data) => API.post('/auth/login/', data),
@@ -19,7 +31,7 @@ export const authAPI = {
 export const productsAPI = {
   list: (params) => API.get('/products/', { params }),
   detail: (id) => API.get(`/products/${id}/`),
-  create: (data) => API.post('/products/', data, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  create: (data) => API.post('/products/', data),
   update: (id, data) => API.patch(`/products/${id}/`, data),
   delete: (id) => API.delete(`/products/${id}/`),
   myProducts: () => API.get('/products/my/'),

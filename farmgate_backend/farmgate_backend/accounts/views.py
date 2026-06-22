@@ -25,9 +25,24 @@ class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        username = request.data.get('username')
+        username_or_email = request.data.get('username') or request.data.get('email')
         password = request.data.get('password')
-        user = authenticate(username=username, password=password)
+
+        if not username_or_email or not password:
+            return Response(
+                {'error': 'Username/email and password are required.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = authenticate(username=username_or_email, password=password)
+        if user is None and '@' in username_or_email:
+            try:
+                user_obj = User.objects.get(email__iexact=username_or_email)
+            except User.DoesNotExist:
+                user_obj = None
+            if user_obj:
+                user = authenticate(username=user_obj.username, password=password)
+
         if user:
             refresh = RefreshToken.for_user(user)
             return Response({
@@ -35,7 +50,8 @@ class LoginView(APIView):
                 'access': str(refresh.access_token),
                 'refresh': str(refresh),
             })
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response({'error': 'Invalid username/email or password.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class ProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer

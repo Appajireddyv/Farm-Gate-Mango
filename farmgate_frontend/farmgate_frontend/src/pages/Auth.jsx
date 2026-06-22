@@ -16,7 +16,7 @@ export default function Login() {
       const user = await login(form.username, form.password);
       navigate(user.role === 'farmer' ? '/farmer/dashboard' : '/products');
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed. Check credentials.');
+      setError(err.response?.data?.error || err.message || 'Login failed. Check credentials.');
     } finally { setLoading(false); }
   };
 
