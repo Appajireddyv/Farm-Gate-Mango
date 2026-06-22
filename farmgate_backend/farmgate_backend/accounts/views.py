@@ -5,6 +5,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from .models import User
 from .serializers import RegisterSerializer, UserSerializer
+import logging
+
+logger = logging.getLogger(__name__)
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
@@ -25,6 +28,14 @@ class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
+        try:
+            body = request.body.decode('utf-8')
+        except Exception:
+            body = str(request.body)
+        logger.info('Login POST received: content_type=%s', request.content_type)
+        logger.info('Login request body (truncated): %s', body[:2000])
+        logger.info('Login request.data: %s', request.data)
+
         username_or_email = request.data.get('username') or request.data.get('email')
         password = request.data.get('password')
 
