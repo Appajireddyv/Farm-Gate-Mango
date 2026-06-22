@@ -46,9 +46,9 @@ export default function Login() {
           Don't have an account? <Link to="/register" style={{ color: '#2d6a4f', fontWeight: 600 }}>Register free</Link>
         </div>
         <div style={{ marginTop: '1.5rem', padding: '1rem', background: '#f0fdf4', borderRadius: '8px', fontSize: '0.82rem', color: '#166534' }}>
-          <strong>Demo accounts:</strong><br/>
-          Farmer: raju_farmer / mango123<br/>
-          Customer: priya_customer / buy123
+          {/* <strong>Demo accounts:</strong><br/> */}
+          {/* Farmer: raju_farmer / mango123<br/>
+          Customer: priya_customer / buy123 */}
         </div>
       </div>
     </div>
@@ -98,12 +98,12 @@ export function Register() {
         {error && <div style={{ background: '#fee2e2', color: '#991b1b', padding: '0.8rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.88rem' }}>{error}</div>}
         <form onSubmit={handle}>
           <div className="form-grid-2">
-            <div className="form-group"><label className="form-label">First Name</label><input className="form-control" value={form.first_name} onChange={set('first_name')} placeholder="Raju" required /></div>
-            <div className="form-group"><label className="form-label">Last Name</label><input className="form-control" value={form.last_name} onChange={set('last_name')} placeholder="Patil" required /></div>
+            <div className="form-group"><label className="form-label">First Name</label><input className="form-control" value={form.first_name} onChange={set('first_name')} placeholder="First Name" required /></div>
+            <div className="form-group"><label className="form-label">Last Name</label><input className="form-control" value={form.last_name} onChange={set('last_name')} placeholder="Last Name" required /></div>
           </div>
-          <div className="form-group"><label className="form-label">Username</label><input className="form-control" value={form.username} onChange={set('username')} placeholder="raju123" required /></div>
-          <div className="form-group"><label className="form-label">Email</label><input className="form-control" type="email" value={form.email} onChange={set('email')} placeholder="raju@farm.com" required /></div>
-          <div className="form-group"><label className="form-label">Phone</label><input className="form-control" value={form.phone} onChange={set('phone')} placeholder="9876543210" /></div>
+          <div className="form-group"><label className="form-label">Username</label><input className="form-control" value={form.username} onChange={set('username')} placeholder="abc123" required /></div>
+          <div className="form-group"><label className="form-label">Email</label><input className="form-control" type="email" value={form.email} onChange={set('email')} placeholder="abc@farm.com" required /></div>
+          <div className="form-group"><label className="form-label">Phone</label><input type="tel" className="form-control" value={form.phone} onChange={(e)=>setForm({...form,phone:e.target.value.replace(/\D/g,'').slice(0,10)})} placeholder="Enter  Mobile Number" maxLength={10} /></div>
           {form.role === 'farmer' && <>
             <div className="form-grid-2">
               <div className="form-group"><label className="form-label">Village</label><input className="form-control" value={form.village} onChange={set('village')} placeholder="Devgad" /></div>

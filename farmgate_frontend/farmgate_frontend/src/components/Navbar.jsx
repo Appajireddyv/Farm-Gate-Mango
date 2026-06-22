@@ -16,7 +16,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-brand display-font">
-        🥭 Farm<span>Gate</span>
+        🥭 Farm<span>Gate Mangoes</span>
       </Link>
       <button type="button" className="menu-toggle" onClick={toggleMenu} aria-expanded={menuOpen} aria-label="Toggle navigation">
         {menuOpen ? <X size={20} /> : <Menu size={20} />}

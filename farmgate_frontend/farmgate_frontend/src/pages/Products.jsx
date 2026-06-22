@@ -1,13 +1,20 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { productsAPI } from '../api';
 import ProductCard from '../components/ProductCard';
 import { Search, Filter } from 'lucide-react';
 
 export default function Products() {
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(query.get('search') || '');
   const [category, setCategory] = useState('');
+
+  useEffect(() => {
+    setSearch(query.get('search') || '');
+  }, [location.search]);
 
   useEffect(() => {
     productsAPI.list({ category: category || undefined })

@@ -18,7 +18,15 @@ export default function ProductDetail() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    productsAPI.detail(id).then(res => { setProduct(res.data); setQty(res.data.min_order_qty || 1); }).finally(() => setLoading(false));
+    productsAPI.detail(id)
+      .then(res => {
+        setProduct(res.data);
+        setQty(res.data.min_order_qty || 1);
+        const stored = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+        const next = [res.data.id, ...stored.filter(item => item !== res.data.id)].slice(0, 8);
+        localStorage.setItem('recentlyViewed', JSON.stringify(next));
+      })
+      .finally(() => setLoading(false));
   }, [id]);
 
   const handleAddToCart = () => {
