@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-farmgate-mango-direct-2026'
@@ -59,8 +60,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
 }
 
-CORS_ALLOW_ALL_ORIGINS =  ['https://farmgate-frontend.onrender.com']
-
+CORS_ALLOW_ALL_ORIGINS =  os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'True') == 'True'
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
