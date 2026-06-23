@@ -1,5 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import FarmerHome from './FarmerHome';
 import { productsAPI } from '../api';
 import ProductCard from '../components/ProductCard';
 import { Truck, ShieldCheck, Leaf, IndianRupee, Search, Gift, MapPin } from 'lucide-react';
@@ -14,6 +16,7 @@ const HERO_CAROUSEL_IMAGES = [
 ];
 
 export default function Home() {
+  const { user, loading: authLoading } = useAuth();
   const [featured, setFeatured] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [recentlyViewed, setRecentlyViewed] = useState([]);
@@ -21,6 +24,9 @@ export default function Home() {
   const [pincodeMessage, setPincodeMessage] = useState('Enter your pincode to see which farmers deliver to you.');
   const [carouselIndex, setCarouselIndex] = useState(0);
   const navigate = useNavigate();
+
+  // If the logged in user is a farmer, render the dedicated FarmerHome component
+  if (!authLoading && user && user.role === 'farmer') return <FarmerHome />;
 
   useEffect(() => {
     productsAPI.list().then(res => setFeatured(res.data.slice(0, 3))).catch(() => {});

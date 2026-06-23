@@ -12,6 +12,7 @@ import Cart from './pages/Cart';
 import Orders, { OrderDetail } from './pages/Orders';
 import FarmerDashboard from './pages/FarmerDashboard';
 import AddProduct from './pages/AddProduct';
+import Profile from './pages/Profile';
 
 function ProtectedRoute({ children, role }) {
   const { user, loading } = useAuth();
@@ -49,6 +50,7 @@ export default function App() {
             <Route path="/farmer/products" element={<ProtectedRoute role="farmer"><FarmerDashboard /></ProtectedRoute>} />
             <Route path="/farmer/products/add" element={<ProtectedRoute role="farmer"><AddProduct /></ProtectedRoute>} />
             <Route path="/farmer/products/edit/:id" element={<ProtectedRoute role="farmer"><AddProduct /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           </Routes>
           {showBackToTop && (
             <button
