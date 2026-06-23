@@ -5,15 +5,9 @@ import FarmerHome from './FarmerHome';
 import { productsAPI } from '../api';
 import ProductCard from '../components/ProductCard';
 import { Truck, ShieldCheck, Leaf, IndianRupee, Search, Gift, MapPin } from 'lucide-react';
+import { carouselImages } from '../assets/carouselImages';
 
-const HERO_CAROUSEL_IMAGES = [
-  'https://images.unsplash.com/photo-1511781188081-7d8e8a97c94f?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1575303229779-1ff08140322b?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=1200&q=80',
-];
+const HERO_CAROUSEL_IMAGES = carouselImages;
 
 export default function Home() {
   const { user, loading: authLoading } = useAuth();
