@@ -12,7 +12,7 @@ ALLOWED_HOSTS =  [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://farmgate-backend.onrender.com",
+    # "https://farmgate-backend.onrender.com",
     "https://farmgate-frontend.onrender.com",
 ]
 
