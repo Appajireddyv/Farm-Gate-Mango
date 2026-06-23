@@ -4,12 +4,22 @@ import { productsAPI } from '../api';
 import ProductCard from '../components/ProductCard';
 import { Truck, ShieldCheck, Leaf, IndianRupee, Search, Gift, MapPin } from 'lucide-react';
 
+const HERO_CAROUSEL_IMAGES = [
+  'https://images.unsplash.com/photo-1511781188081-7d8e8a97c94f?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1575303229779-1ff08140322b?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=1200&q=80',
+];
+
 export default function Home() {
   const [featured, setFeatured] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [pincode, setPincode] = useState('');
   const [pincodeMessage, setPincodeMessage] = useState('Enter your pincode to see which farmers deliver to you.');
+  const [carouselIndex, setCarouselIndex] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,6 +32,14 @@ export default function Home() {
     Promise.all(stored.slice(0, 4).map(id => productsAPI.detail(id).then(res => res.data).catch(() => null)))
       .then(items => setRecentlyViewed(items.filter(Boolean)));
   }, []);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setCarouselIndex(prevIndex => (prevIndex + 1) % HERO_CAROUSEL_IMAGES.length);
+    }, 3000);
+
+    return () => window.clearInterval(interval);
+  }, [HERO_CAROUSEL_IMAGES.length]);
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
@@ -41,7 +59,15 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="hero">
+      <section
+        className="hero"
+        style={{
+          backgroundImage: `url(${HERO_CAROUSEL_IMAGES[carouselIndex]})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
         <div className="hero-badge">🌟 No Middlemen · Direct from Farm</div>
         <h1 className="hero-title display-font">
           Fresh Mangoes,<br />Straight from the<br />Farmer's Hand
