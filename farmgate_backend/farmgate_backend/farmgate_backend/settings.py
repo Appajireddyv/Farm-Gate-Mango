@@ -8,6 +8,7 @@ DEBUG = True
 ALLOWED_HOSTS =  [
     "farmgate-backend.onrender.com",
     "farmgate-frontend.onrender.com",
+    "farm-gate-mango.onrender.com",
     "localhost",
     "127.0.0.1",
 ]
