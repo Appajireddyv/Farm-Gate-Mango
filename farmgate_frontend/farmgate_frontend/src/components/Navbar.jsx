@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { ShoppingCart, User, LogOut, Package, LayoutDashboard, Menu, X } from 'lucide-react';
+import logo from '../assets/logo.jpeg';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -10,13 +11,14 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleLogout = () => { logout(); navigate('/'); window.location.reload(); };
+  const handleLogout = () => { logout(); navigate('/', { replace: true }); };
   const toggleMenu = () => setMenuOpen(open => !open);
 
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-brand display-font">
-        🥭 Farm<span>Gate Mangoes</span>
+        <img src={logo} alt="Farm 2 Door logo" className="navbar-logo" />
+        Farm 2 Door
       </Link>
       <button type="button" className="menu-toggle" onClick={toggleMenu} aria-expanded={menuOpen} aria-label="Toggle navigation">
         {menuOpen ? <X size={20} /> : <Menu size={20} />}

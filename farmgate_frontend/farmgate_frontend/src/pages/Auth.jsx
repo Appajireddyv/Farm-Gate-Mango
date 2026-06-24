@@ -26,7 +26,7 @@ export default function Login() {
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🥭</div>
           <h2 className="display-font" style={{ fontSize: '1.8rem' }}>Welcome Back</h2>
-          <p style={{ color: '#6b7280', marginTop: '0.3rem' }}>Sign in to your FarmGate account</p>
+          <p style={{ color: '#6b7280', marginTop: '0.3rem' }}>Sign in to your Farm 2 Door account</p>
         </div>
         {error && <div style={{ background: '#fee2e2', color: '#991b1b', padding: '0.8rem 1rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</div>}
         <form onSubmit={handle}>
@@ -83,7 +83,7 @@ export function Register() {
       <div className="auth-card" style={{ maxWidth: 560 }}>
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '0.4rem' }}>🌱</div>
-          <h2 className="display-font" style={{ fontSize: '1.8rem' }}>Join FarmGate</h2>
+          <h2 className="display-font" style={{ fontSize: '1.8rem' }}>Join Farm 2 Door</h2>
           <p style={{ color: '#6b7280' }}>Connect directly, no middlemen</p>
         </div>
         <div className="button-group" style={{ marginBottom: '1.5rem', background: '#f3f4f6', borderRadius: '50px', padding: '4px' }}>

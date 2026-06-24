@@ -68,7 +68,7 @@ export default function Home() {
           backgroundRepeat: 'no-repeat',
         }}
       >
-        <div className="hero-badge">🌟 No Middlemen · Direct from Farm</div>
+        <div className="hero-badge">· No Middlemen · Direct from Farm</div>
         <h1 className="hero-title display-font">
           Fresh Mangoes,<br />Straight from the<br />Farmer's Hand
         </h1>
@@ -243,7 +243,7 @@ export default function Home() {
         <div className="container">
           <h2 className="display-font" style={{ fontSize: '2.2rem', marginBottom: '1rem' }}>Are you a Mango Farmer?</h2>
           <p style={{ opacity: 0.85, maxWidth: 500, margin: '0 auto 2rem', fontSize: '1.05rem' }}>
-            Stop losing money to middlemen. List your mangoes on FarmGate and sell directly to customers across India at your own price.
+            Stop losing money to middlemen. List your mangoes on Farm 2 Door and sell directly to customers across India at your own price.
           </p>
           <Link to="/register?role=farmer" className="btn btn-amber" style={{ padding: '0.9rem 2.5rem', fontSize: '1rem' }}>
             Start Selling Free →
@@ -253,7 +253,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer style={{ background: '#1a1a2e', color: '#9ca3af', padding: '2rem', textAlign: 'center', fontSize: '0.9rem' }}>
-        <div style={{ marginBottom: '0.5rem' }}>🥭 <strong style={{ color: 'white' }}>FarmGate</strong> — Farm to Table, No Middlemen</div>
+        <div style={{ marginBottom: '0.5rem' }}>🥭 <strong style={{ color: 'white' }}>Farm 2 Door</strong> — Farm to Table, No Middlemen</div>
         <div>Made with ❤️ for Indian Farmers · {new Date().getFullYear()}</div>
       </footer>
     </div>

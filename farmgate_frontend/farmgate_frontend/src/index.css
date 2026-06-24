@@ -46,12 +46,12 @@ img, svg { max-width: 100%; height: auto; display: block; }
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 12px rgba(45,106,79,0.08);
+  background: var(--white);
   flex-wrap: wrap;
   gap: 0.75rem;
 }
-.navbar-brand { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--green); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
-.navbar-brand span { color: var(--amber-dark); }
+.navbar-brand { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--green); text-decoration: none; display: flex; align-items: center; gap: 0.75rem; }
+.navbar-logo { width: 48px; height: 48px; border-radius: 14px; object-fit: cover; background: transparent; padding: 0; box-shadow: none; }
 .menu-toggle { display: none; border: none; background: none; color: var(--green); cursor: pointer; padding: 0.3rem; border-radius: 8px; transition: background 0.2s; }
 .menu-toggle:hover { background: rgba(45,106,79,0.08); }
 .nav-links { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
