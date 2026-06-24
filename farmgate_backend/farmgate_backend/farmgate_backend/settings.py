@@ -70,8 +70,10 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
 }
 
-CORS_ALLOW_ALL_ORIGINS =  os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'True') == 'True'
-LANGUAGE_CODE = 'en-us'
+CORS_ALLOWED_ORIGINS = [
+    "https://farmgate-frontend.onrender.com",
+]
+
 TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
