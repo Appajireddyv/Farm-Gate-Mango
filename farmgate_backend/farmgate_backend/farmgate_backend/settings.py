@@ -5,17 +5,17 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-farmgate-mango-direct-2026'
 DEBUG = True
-ALLOWED_HOSTS =  ["*"
-    # "farmgate-backend.onrender.com",
-    # "farmgate-frontend.onrender.com",
-    # "farm-gate-mango.onrender.com",
-    # "localhost",
-    # "127.0.0.1",
+ALLOWED_HOSTS =  ["*",
+    "farmgate-backend.onrender.com",
+    "farmgate-frontend.onrender.com",
+    "farm-gate-mango.onrender.com",
+    "localhost",
+    "127.0.0.1",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://farmgate-backend.onrender.com",
-    "https://farmgate-frontend.onrender.com",
+    'https://farm-gate-mango.onrender.com',
+    'https://farm-gate-mango-frontend.onrender.com',
 ]
 
 INSTALLED_APPS = [
@@ -72,7 +72,9 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "https://farmgate-frontend.onrender.com",
+    'https://farm-gate-mango-frontend.onrender.com',
+    'http://localhost:5173',
+    'http://localhost:3000',
 ]
 
 TIME_ZONE = 'Asia/Kolkata'
