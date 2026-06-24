@@ -7,6 +7,7 @@ SECRET_KEY = 'django-insecure-farmgate-mango-direct-2026'
 DEBUG = True
 ALLOWED_HOSTS =  [
     "farmgate-backend.onrender.com",
+    "farmgate-frontend.onrender.com",
     "localhost",
     "127.0.0.1",
 ]
