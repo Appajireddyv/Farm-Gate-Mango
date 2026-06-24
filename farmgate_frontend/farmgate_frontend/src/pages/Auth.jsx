@@ -86,7 +86,7 @@ export function Register() {
           <h2 className="display-font" style={{ fontSize: '1.8rem' }}>Join Farm 2 Door</h2>
           <p style={{ color: '#6b7280' }}>Connect directly, no middlemen</p>
         </div>
-        <div className="button-group" style={{ marginBottom: '1.5rem', background: '#f3f4f6', borderRadius: '50px', padding: '4px' }}>
+        <div className="button-group role-selector" style={{ marginBottom: '1.5rem', background: '#f3f4f6', borderRadius: '50px', padding: '4px' }}>
           {['customer', 'farmer'].map(r => (
             <button key={r} type="button" onClick={() => setForm({ ...form, role: r })}
               style={{ flex: 1, padding: '0.5rem', borderRadius: '50px', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem',

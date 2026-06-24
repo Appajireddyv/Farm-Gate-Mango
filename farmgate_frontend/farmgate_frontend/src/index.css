@@ -103,8 +103,8 @@ img, svg { max-width: 100%; height: auto; display: block; }
 @media (max-width: 768px) {
   .navbar { padding: 0.75rem 1rem; }
   .menu-toggle { display: inline-flex; }
-  .nav-links { width: 100%; display: none; flex-direction: column; align-items: stretch; gap: 0.75rem; background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; max-height: 0; overflow: hidden; }
-  .nav-links.open { display: flex; max-height: 500px; }
+  .nav-links { display: flex; width: 100%; flex-direction: column; align-items: stretch; gap: 0.75rem; background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .nav-links.open { max-height: 600px; }
   .nav-links a,
   .nav-links button { width: 100%; justify-content: center; }
   .nav-links .hide-mobile { display: none; }
@@ -130,6 +130,8 @@ img, svg { max-width: 100%; height: auto; display: block; }
   .card { border-radius: 14px; }
   .auth-page { padding: 2rem 1rem; }
   .auth-card { width: 100%; max-width: 100%; padding: 1.8rem; }
+  .role-selector { background: transparent !important; padding: 0 !important; border-radius: 8px; flex-direction: column; }
+  .role-selector button { width: 100%; margin-bottom: 0.5rem; border-radius: 8px; padding: 0.7rem !important; }
   .page-subtitle { font-size: 0.95rem; }
   .table th, .table td { padding: 0.75rem 0.85rem; }
   .tabs { flex-wrap: wrap; }

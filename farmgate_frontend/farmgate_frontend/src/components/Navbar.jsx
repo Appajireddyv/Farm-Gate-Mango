@@ -28,7 +28,7 @@ export default function Navbar() {
           <Link to="/products" onClick={() => setMenuOpen(false)}>Shop</Link>
         )}
         {!user && <>
-          <Link to="/login" className="hide-mobile" onClick={() => setMenuOpen(false)}>Login</Link>
+          <Link to="/login" onClick={() => setMenuOpen(false)}>Login</Link>
           <Link to="/register" className="btn btn-primary btn-sm" onClick={() => setMenuOpen(false)}>Join Free</Link>
         </>}
         {user && user.role === 'customer' && <>
