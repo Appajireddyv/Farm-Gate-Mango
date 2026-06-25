@@ -33,13 +33,22 @@ export function AuthProvider({ children }) {
     return res.data.user;
   };
 
+  const sendFarmerOTP = (data) => authAPI.sendFarmerOTP(data);
+
+  const verifyFarmerOTP = async (phone, otp) => {
+    const res = await authAPI.verifyFarmerOTP({ phone, otp });
+    localStorage.setItem('token', res.data.access);
+    setUser(res.data.user);
+    return res.data.user;
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, sendFarmerOTP, verifyFarmerOTP, logout }}>
       {children}
     </AuthContext.Provider>
   );

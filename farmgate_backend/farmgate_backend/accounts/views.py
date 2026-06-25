@@ -3,8 +3,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from .models import User
-from .serializers import RegisterSerializer, UserSerializer
+from .models import User, RegistrationOTP
+from .serializers import (
+    RegisterSerializer,
+    UserSerializer,
+    FarmerRegistrationDataSerializer,
+    FarmerVerifyOTPSerializer,
+)
+from .otp_utils import generate_otp, send_otp_sms
 import logging
 
 logger = logging.getLogger(__name__)
@@ -23,6 +29,74 @@ class RegisterView(generics.CreateAPIView):
             'access': str(refresh.access_token),
             'refresh': str(refresh),
         }, status=status.HTTP_201_CREATED)
+
+class FarmerSendOTPView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = FarmerRegistrationDataSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        phone = serializer.validated_data['phone']
+        otp = generate_otp()
+
+        RegistrationOTP.objects.filter(phone=phone, is_used=False).update(is_used=True)
+        RegistrationOTP.objects.create(
+            phone=phone,
+            otp=otp,
+            registration_data=serializer.validated_data,
+        )
+
+        extra = send_otp_sms(phone, otp)
+        response = {
+            'message': 'OTP sent to your mobile number.',
+            'phone': phone,
+            'expires_in_seconds': 300,
+        }
+        response.update(extra)
+        return Response(response, status=status.HTTP_200_OK)
+
+
+class FarmerVerifyOTPView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = FarmerVerifyOTPSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        phone = serializer.validated_data['phone']
+        otp = serializer.validated_data['otp']
+
+        otp_record = (
+            RegistrationOTP.objects.filter(phone=phone, is_used=False)
+            .order_by('-created_at')
+            .first()
+        )
+        if not otp_record or not otp_record.is_valid():
+            return Response(
+                {'error': 'OTP expired or not found. Please request a new one.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if otp_record.otp != otp:
+            return Response(
+                {'error': 'Invalid OTP. Please try again.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        data = otp_record.registration_data
+        password = data.pop('password')
+        user = User(role='farmer', is_verified=True, **data)
+        user.set_password(password)
+        user.save()
+
+        otp_record.is_used = True
+        otp_record.save(update_fields=['is_used'])
+
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'user': UserSerializer(user).data,
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+        }, status=status.HTTP_201_CREATED)
+
 
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]

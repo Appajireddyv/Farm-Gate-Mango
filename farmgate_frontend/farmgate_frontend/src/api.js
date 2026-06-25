@@ -22,6 +22,8 @@ API.interceptors.response.use(
 
 export const authAPI = {
   register: (data) => API.post('/auth/register/', data),
+  sendFarmerOTP: (data) => API.post('/auth/farmer/send-otp/', data),
+  verifyFarmerOTP: (data) => API.post('/auth/farmer/verify-otp/', data),
   login: (data) => API.post('/auth/login/', data),
   getProfile: () => API.get('/auth/profile/'),
   updateProfile: (data) => API.patch('/auth/profile/', data),
