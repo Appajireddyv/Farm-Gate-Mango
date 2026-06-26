@@ -18,7 +18,9 @@ build/
 
 # Django
 db.sqlite3
-media/
+media/*
+!media/products/
+!media/products/**
 staticfiles/
 
 # IDE / OS

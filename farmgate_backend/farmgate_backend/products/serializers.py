@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 from .models import Product, ProductReview
 from accounts.serializers import UserSerializer
@@ -44,4 +45,7 @@ class ProductSerializer(serializers.ModelSerializer):
             request = self.context.get('request')
             if request is not None:
                 data['image'] = request.build_absolute_uri(image)
+            elif settings.MEDIA_BASE_URL:
+                path = image if image.startswith('/') else f'/{settings.MEDIA_URL.strip("/")}/{image}'
+                data['image'] = f'{settings.MEDIA_BASE_URL}{path}'
         return data
