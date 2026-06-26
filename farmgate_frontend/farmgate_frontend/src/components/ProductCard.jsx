@@ -1,14 +1,16 @@
 import { Link } from 'react-router-dom';
 import { Leaf, Star, MapPin } from 'lucide-react';
+import { resolveMediaUrl } from '../api';
 
 export default function ProductCard({ product }) {
   const emoji = { alphonso: '🥭', kesar: '🍊', dasheri: '🥭', langra: '🥭', totapuri: '🍋', other: '🥭' };
+  const imageUrl = resolveMediaUrl(product.image);
   return (
     <Link to={`/products/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
       <div className="product-card">
         <div className="product-card-img">
-          {product.image
-            ? <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          {imageUrl
+            ? <img src={imageUrl} alt={product.name} loading="lazy" />
             : <span>{emoji[product.category] || '🥭'}</span>
           }
         </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ordersAPI, productsAPI } from '../api';
+import { ordersAPI, productsAPI, resolveMediaUrl } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { Package, ShoppingBag, IndianRupee, TrendingUp } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -112,9 +112,16 @@ export default function FarmerDashboard() {
           {products.length === 0
             ? <div className="empty-state"><div className="empty-state-icon">🥭</div><p>No products listed yet.</p><Link to="/farmer/products/add" className="btn btn-primary" style={{ marginTop: '1rem' }}>List Your First Mango</Link></div>
             : <div className="grid grid-3">
-                {products.map(p => (
+                {products.map(p => {
+                  const imageUrl = resolveMediaUrl(p.image);
+                  return (
                   <div key={p.id} className="card">
-                    <div style={{ height: 140, background: 'linear-gradient(135deg,#fbbf24,#f59e0b)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3.5rem' }}>🥭</div>
+                    <div className="product-card-img" style={{ height: 140 }}>
+                      {imageUrl
+                        ? <img src={imageUrl} alt={p.name} loading="lazy" />
+                        : <span style={{ fontSize: '3.5rem' }}>🥭</span>
+                      }
+                    </div>
                     <div className="card-body">
                       <div style={{ fontWeight: 700, marginBottom: '0.3rem' }}>{p.name}</div>
                       <div style={{ color: '#2d6a4f', fontWeight: 700 }}>₹{p.price_per_unit}/{p.unit}</div>
@@ -125,7 +132,8 @@ export default function FarmerDashboard() {
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
           }
         </div>

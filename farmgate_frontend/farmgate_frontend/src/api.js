@@ -2,6 +2,15 @@ import axios from 'axios';
 
 const API = axios.create({ baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api' });
 
+const mediaBase = (import.meta.env.VITE_API_URL || 'http://localhost:8000/api').replace(/\/api\/?$/, '');
+
+export function resolveMediaUrl(url) {
+  if (!url) return null;
+  if (/^https?:\/\//i.test(url)) return url;
+  const path = url.startsWith('/') ? url : `/${url}`;
+  return `${mediaBase}${path}`;
+}
+
 API.interceptors.request.use(config => {
   const token = localStorage.getItem('token');
   if (token) config.headers.Authorization = `Bearer ${token}`;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { productsAPI } from '../api';
+import { productsAPI, resolveMediaUrl } from '../api';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Leaf, MapPin, Star, Minus, Plus, ShoppingCart, Package } from 'lucide-react';
@@ -53,6 +53,8 @@ export default function ProductDetail() {
   if (loading) return <div className="spinner" style={{ marginTop: '4rem' }} />;
   if (!product) return <div className="container section"><p>Product not found.</p></div>;
 
+  const imageUrl = resolveMediaUrl(product.image);
+
   return (
     <div className="container section">
       <div className="breadcrumb">
@@ -62,9 +64,9 @@ export default function ProductDetail() {
       <div className="product-detail-grid">
         {/* Image */}
         <div>
-          <div className="product-image-card" style={{ background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', height: '380px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '8rem', overflow: 'hidden' }}>
-            {product.image
-              ? <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <div className="product-image-card">
+            {imageUrl
+              ? <img src={imageUrl} alt={product.name} loading="lazy" />
               : '🥭'
             }
           </div>

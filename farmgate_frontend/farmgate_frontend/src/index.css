@@ -31,6 +31,9 @@ body {
 }
 
 img, svg { max-width: 100%; height: auto; display: block; }
+.product-card-img img,
+.product-image-card img,
+.cart-item-img img { max-width: none; height: 100%; width: 100%; object-fit: cover; }
 
 .display-font { font-family: 'Playfair Display', serif; }
 
@@ -142,7 +145,8 @@ img, svg { max-width: 100%; height: auto; display: block; }
   .button-group { flex-direction: column; }
   .breadcrumb { flex-wrap: wrap; gap: 0.5rem; }
   .container { padding: 0 1rem; }
-  .product-card-img { height: 180px; }
+  .product-card-img { height: 180px; min-height: 180px; }
+  .product-image-card { height: 280px; font-size: 5rem; }
   .form-grid-2,
   .form-grid-3 { grid-template-columns: 1fr; }
   .product-detail-actions { justify-content: stretch; }
@@ -171,7 +175,12 @@ img, svg { max-width: 100%; height: auto; display: block; }
 /* Product Cards */
 .product-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
 .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
-.product-card-img { width: 100%; height: 200px; object-fit: cover; background: linear-gradient(135deg, #fbbf24, #f59e0b); display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+.product-card-img { width: 100%; height: 200px; background: linear-gradient(135deg, #fbbf24, #f59e0b); display: flex; align-items: center; justify-content: center; font-size: 4rem; position: relative; overflow: hidden; flex-shrink: 0; }
+.product-card-img img { position: absolute; inset: 0; }
+.product-image-card { background: linear-gradient(135deg, #fbbf24, #f59e0b); height: 380px; display: flex; align-items: center; justify-content: center; font-size: 8rem; overflow: hidden; position: relative; border-radius: var(--radius); }
+.product-image-card img { position: absolute; inset: 0; }
+.cart-item-img { background: linear-gradient(135deg, #fbbf24, #f59e0b); border-radius: 12px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; flex-shrink: 0; position: relative; overflow: hidden; }
+.cart-item-img img { position: absolute; inset: 0; }
 .product-card-body { padding: 1.2rem; }
 .product-card-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.3rem; }
 .product-card-farmer { font-size: 0.82rem; color: var(--text-light); margin-bottom: 0.5rem; }
@@ -268,7 +277,10 @@ img, svg { max-width: 100%; height: auto; display: block; }
 
 /* Auth pages */
 .auth-page { min-height: calc(100vh - 68px); display: flex; align-items: center; justify-content: center; padding: 2rem; }
-.auth-card { background: white; border-radius: var(--radius); padding: 2.5rem; width: 100%; max-width: 480px; box-shadow: 0 8px 40px rgba(0,0,0,0.12); }
+.auth-card { background: white; border-radius: var(--radius); padding: 2.5rem; width: 100%; max-width: 480px; box-shadow: 0 8px 40px rgba(0,0,0,0.12); position: relative; }
+.auth-loading-overlay { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; background: rgba(255, 255, 255, 0.92); border-radius: inherit; backdrop-filter: blur(2px); }
+.auth-loading-spinner { border: 3px solid var(--border); border-top-color: var(--green); border-radius: 50%; width: 44px; height: 44px; animation: spin 0.8s linear infinite; }
+.auth-loading-text { color: #374151; font-size: 0.95rem; font-weight: 600; margin: 0; }
 .google-signin-wrap { display: flex; justify-content: center; width: 100%; }
 .google-signin-wrap > div { width: 100% !important; }
 

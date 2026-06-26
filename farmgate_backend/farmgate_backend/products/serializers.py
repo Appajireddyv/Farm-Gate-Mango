@@ -36,3 +36,12 @@ class ProductSerializer(serializers.ModelSerializer):
         if reviews.exists():
             return round(sum(r.rating for r in reviews) / reviews.count(), 1)
         return None
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        image = data.get('image')
+        if image:
+            request = self.context.get('request')
+            if request is not None:
+                data['image'] = request.build_absolute_uri(image)
+        return data

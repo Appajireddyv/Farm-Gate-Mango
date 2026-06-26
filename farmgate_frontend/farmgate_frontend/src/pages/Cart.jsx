@@ -2,7 +2,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ordersAPI } from '../api';
+import { ordersAPI, resolveMediaUrl } from '../api';
 import { Trash2, Minus, Plus, ShoppingBag } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -58,10 +58,17 @@ export default function Cart() {
       <div className="cart-layout">
         {/* Cart items */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {cart.map(({ product, qty }) => (
+          {cart.map(({ product, qty }) => {
+            const imageUrl = resolveMediaUrl(product.image);
+            return (
             <div key={product.id} className="card">
               <div className="card-body" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                <div style={{ background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', borderRadius: '12px', width: 80, height: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', flexShrink: 0 }}>🥭</div>
+                <div className="cart-item-img">
+                  {imageUrl
+                    ? <img src={imageUrl} alt={product.name} loading="lazy" />
+                    : <span>🥭</span>
+                  }
+                </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 700, fontSize: '1.05rem' }}>{product.name}</div>
                   <div style={{ color: '#6b7280', fontSize: '0.85rem' }}>{product.farmer_name} · ₹{product.price_per_unit}/{product.unit}</div>
@@ -77,7 +84,8 @@ export default function Cart() {
                 <button onClick={() => removeFromCart(product.id)} className="btn btn-danger btn-sm"><Trash2 size={14} /></button>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Summary */}

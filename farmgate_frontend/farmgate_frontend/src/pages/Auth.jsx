@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import GoogleSignIn from '../components/GoogleSignIn';
+import AuthLoading from '../components/AuthLoading';
 
 function AuthDivider() {
   return (
@@ -49,9 +50,15 @@ export default function Login() {
     } finally { setLoading(false); }
   };
 
+  const isAuthLoading = loading || oauthLoading;
+
   return (
     <div className="auth-page">
       <div className="auth-card">
+        <AuthLoading
+          active={isAuthLoading}
+          message={oauthLoading ? 'Signing in with Google...' : 'Signing in...'}
+        />
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🥭</div>
           <h2 className="display-font" style={{ fontSize: '1.8rem' }}>Welcome Back</h2>
@@ -63,11 +70,6 @@ export default function Login() {
           onError={() => setError('Google sign-in was cancelled or failed.')}
           text="signin_with"
         />
-        {oauthLoading && (
-          <p style={{ textAlign: 'center', color: '#6b7280', fontSize: '0.88rem', marginTop: '0.75rem' }}>
-            Signing in with Google...
-          </p>
-        )}
         <AuthDivider />
         <p style={{ color: '#6b7280', fontSize: '0.85rem', marginBottom: '1rem', textAlign: 'center' }}>
           Farmers: sign in with your username and password
@@ -75,13 +77,13 @@ export default function Login() {
         <form onSubmit={handle}>
           <div className="form-group">
             <label className="form-label">Username</label>
-            <input className="form-control" value={form.username} onChange={e => setForm({...form, username: e.target.value})} placeholder="Enter username" required />
+            <input className="form-control" value={form.username} onChange={e => setForm({...form, username: e.target.value})} placeholder="Enter username" required disabled={isAuthLoading} />
           </div>
           <div className="form-group">
             <label className="form-label">Password</label>
-            <input className="form-control" type="password" value={form.password} onChange={e => setForm({...form, password: e.target.value})} placeholder="Enter password" required />
+            <input className="form-control" type="password" value={form.password} onChange={e => setForm({...form, password: e.target.value})} placeholder="Enter password" required disabled={isAuthLoading} />
           </div>
-          <button className="btn btn-primary" style={{ width: '100%', padding: '0.85rem', fontSize: '1rem', marginTop: '0.5rem' }} disabled={loading || oauthLoading}>
+          <button className="btn btn-primary" style={{ width: '100%', padding: '0.85rem', fontSize: '1rem', marginTop: '0.5rem' }} disabled={isAuthLoading}>
             {loading ? 'Signing in...' : 'Sign In with Password'}
           </button>
         </form>
@@ -195,10 +197,17 @@ export function Register() {
   };
 
   const isFarmer = form.role === 'farmer';
+  const isAuthLoading = loading || oauthLoading;
+  const loadingMessage = oauthLoading
+    ? 'Creating your account with Google...'
+    : isFarmer
+      ? (step === 2 ? 'Verifying OTP...' : 'Sending OTP...')
+      : 'Creating your account...';
 
   return (
     <div className="auth-page" style={{ padding: '2rem', alignItems: 'flex-start', paddingTop: '3rem' }}>
       <div className="auth-card" style={{ maxWidth: 560 }}>
+        <AuthLoading active={isAuthLoading} message={loadingMessage} />
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <div style={{ fontSize: '2rem', marginBottom: '0.4rem' }}>🌱</div>
           <h2 className="display-font" style={{ fontSize: '1.8rem' }}>Join Farm 2 Door</h2>
@@ -223,11 +232,6 @@ export function Register() {
               onError={() => setError('Google sign-up was cancelled or failed.')}
               text="signup_with"
             />
-            {oauthLoading && (
-              <p style={{ textAlign: 'center', color: '#6b7280', fontSize: '0.88rem', marginTop: '0.75rem' }}>
-                Creating your account with Google...
-              </p>
-            )}
             <AuthDivider />
             <p style={{ color: '#6b7280', fontSize: '0.85rem', marginBottom: '1rem', textAlign: 'center' }}>
               Or register with email
@@ -253,7 +257,7 @@ export function Register() {
                 required
               />
             </div>
-            <button className="btn btn-primary" style={{ width: '100%', padding: '0.85rem', fontSize: '1rem' }} disabled={loading}>
+            <button className="btn btn-primary" style={{ width: '100%', padding: '0.85rem', fontSize: '1rem' }} disabled={isAuthLoading}>
               {loading ? 'Verifying...' : 'Verify & Create Farmer Account →'}
             </button>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', fontSize: '0.88rem' }}>
@@ -285,7 +289,7 @@ export function Register() {
               <div className="form-group"><label className="form-label">State</label><input className="form-control" value={form.state} onChange={set('state')} placeholder="Maharashtra" /></div>
             </>}
             <div className="form-group"><label className="form-label">Password</label><input className="form-control" type="password" value={form.password} onChange={set('password')} placeholder="Min 6 characters" required /></div>
-            <button className="btn btn-primary" style={{ width: '100%', padding: '0.85rem', fontSize: '1rem' }} disabled={loading}>
+            <button className="btn btn-primary" style={{ width: '100%', padding: '0.85rem', fontSize: '1rem' }} disabled={isAuthLoading}>
               {loading
                 ? (isFarmer ? 'Sending OTP...' : 'Creating account...')
                 : (isFarmer ? 'Send OTP to Verify Phone →' : 'Create Buyer Account →')}
