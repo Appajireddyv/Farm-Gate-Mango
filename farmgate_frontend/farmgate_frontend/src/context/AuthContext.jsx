@@ -26,6 +26,13 @@ export function AuthProvider({ children }) {
     return res.data.user;
   };
 
+  const loginWithGoogle = async (credential) => {
+    const res = await authAPI.loginWithGoogle(credential);
+    localStorage.setItem('token', res.data.access);
+    setUser(res.data.user);
+    return res.data.user;
+  };
+
   const register = async (data) => {
     const res = await authAPI.register(data);
     localStorage.setItem('token', res.data.access);
@@ -48,7 +55,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, sendFarmerOTP, verifyFarmerOTP, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, loginWithGoogle, register, sendFarmerOTP, verifyFarmerOTP, logout }}>
       {children}
     </AuthContext.Provider>
   );

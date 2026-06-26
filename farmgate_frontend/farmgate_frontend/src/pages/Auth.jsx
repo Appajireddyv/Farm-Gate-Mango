@@ -1,20 +1,49 @@
 import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import GoogleSignIn from '../components/GoogleSignIn';
+
+function AuthDivider() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '1.25rem 0' }}>
+      <div style={{ flex: 1, height: 1, background: '#e5e7eb' }} />
+      <span style={{ color: '#9ca3af', fontSize: '0.82rem', fontWeight: 500 }}>or</span>
+      <div style={{ flex: 1, height: 1, background: '#e5e7eb' }} />
+    </div>
+  );
+}
 
 export default function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const [oauthLoading, setOauthLoading] = useState(false);
+  const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
+
+  const redirectAfterAuth = (user) => {
+    navigate(user.role === 'farmer' ? '/farmer/dashboard' : '/products');
+  };
+
+  const handleGoogleSuccess = async (response) => {
+    setOauthLoading(true);
+    setError('');
+    try {
+      const user = await loginWithGoogle(response.credential);
+      redirectAfterAuth(user);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Google sign-in failed.');
+    } finally {
+      setOauthLoading(false);
+    }
+  };
 
   const handle = async (e) => {
     e.preventDefault();
     setLoading(true); setError('');
     try {
       const user = await login(form.username, form.password);
-      navigate(user.role === 'farmer' ? '/farmer/dashboard' : '/products');
+      redirectAfterAuth(user);
     } catch (err) {
       setError(err.response?.data?.error || err.message || 'Login failed. Check credentials.');
     } finally { setLoading(false); }
@@ -29,6 +58,20 @@ export default function Login() {
           <p style={{ color: '#6b7280', marginTop: '0.3rem' }}>Sign in to your Farm 2 Door account</p>
         </div>
         {error && <div style={{ background: '#fee2e2', color: '#991b1b', padding: '0.8rem 1rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</div>}
+        <GoogleSignIn
+          onSuccess={handleGoogleSuccess}
+          onError={() => setError('Google sign-in was cancelled or failed.')}
+          text="signin_with"
+        />
+        {oauthLoading && (
+          <p style={{ textAlign: 'center', color: '#6b7280', fontSize: '0.88rem', marginTop: '0.75rem' }}>
+            Signing in with Google...
+          </p>
+        )}
+        <AuthDivider />
+        <p style={{ color: '#6b7280', fontSize: '0.85rem', marginBottom: '1rem', textAlign: 'center' }}>
+          Farmers: sign in with your username and password
+        </p>
         <form onSubmit={handle}>
           <div className="form-group">
             <label className="form-label">Username</label>
@@ -38,17 +81,12 @@ export default function Login() {
             <label className="form-label">Password</label>
             <input className="form-control" type="password" value={form.password} onChange={e => setForm({...form, password: e.target.value})} placeholder="Enter password" required />
           </div>
-          <button className="btn btn-primary" style={{ width: '100%', padding: '0.85rem', fontSize: '1rem', marginTop: '0.5rem' }} disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
+          <button className="btn btn-primary" style={{ width: '100%', padding: '0.85rem', fontSize: '1rem', marginTop: '0.5rem' }} disabled={loading || oauthLoading}>
+            {loading ? 'Signing in...' : 'Sign In with Password'}
           </button>
         </form>
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: '#6b7280' }}>
           Don't have an account? <Link to="/register" style={{ color: '#2d6a4f', fontWeight: 600 }}>Register free</Link>
-        </div>
-        <div style={{ marginTop: '1.5rem', padding: '1rem', background: '#f0fdf4', borderRadius: '8px', fontSize: '0.82rem', color: '#166534' }}>
-          {/* <strong>Demo accounts:</strong><br/> */}
-          {/* Farmer: raju_farmer / mango123<br/>
-          Customer: priya_customer / buy123 */}
         </div>
       </div>
     </div>
@@ -64,8 +102,27 @@ export function Register() {
   const [info, setInfo] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { register, sendFarmerOTP, verifyFarmerOTP } = useAuth();
+  const [oauthLoading, setOauthLoading] = useState(false);
+  const { register, sendFarmerOTP, verifyFarmerOTP, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
+
+  const redirectAfterAuth = (user) => {
+    navigate(user.role === 'farmer' ? '/farmer/dashboard' : '/products');
+  };
+
+  const handleGoogleSuccess = async (response) => {
+    if (form.role !== 'customer') return;
+    setOauthLoading(true);
+    setError('');
+    try {
+      const user = await loginWithGoogle(response.credential);
+      redirectAfterAuth(user);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Google sign-up failed.');
+    } finally {
+      setOauthLoading(false);
+    }
+  };
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
@@ -158,6 +215,25 @@ export function Register() {
         </div>
         {error && <div style={{ background: '#fee2e2', color: '#991b1b', padding: '0.8rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.88rem' }}>{error}</div>}
         {info && <div style={{ background: '#ecfdf5', color: '#065f46', padding: '0.8rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.88rem' }}>{info}</div>}
+
+        {!isFarmer && step === 1 && (
+          <>
+            <GoogleSignIn
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Google sign-up was cancelled or failed.')}
+              text="signup_with"
+            />
+            {oauthLoading && (
+              <p style={{ textAlign: 'center', color: '#6b7280', fontSize: '0.88rem', marginTop: '0.75rem' }}>
+                Creating your account with Google...
+              </p>
+            )}
+            <AuthDivider />
+            <p style={{ color: '#6b7280', fontSize: '0.85rem', marginBottom: '1rem', textAlign: 'center' }}>
+              Or register with email
+            </p>
+          </>
+        )}
 
         {isFarmer && step === 2 ? (
           <form onSubmit={handleVerifyOTP}>

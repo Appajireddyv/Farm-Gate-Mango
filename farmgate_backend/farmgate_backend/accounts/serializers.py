@@ -67,6 +67,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+class GoogleOAuthSerializer(serializers.Serializer):
+    credential = serializers.CharField()
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

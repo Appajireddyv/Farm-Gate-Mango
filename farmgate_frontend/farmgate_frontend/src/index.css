@@ -269,6 +269,8 @@ img, svg { max-width: 100%; height: auto; display: block; }
 /* Auth pages */
 .auth-page { min-height: calc(100vh - 68px); display: flex; align-items: center; justify-content: center; padding: 2rem; }
 .auth-card { background: white; border-radius: var(--radius); padding: 2.5rem; width: 100%; max-width: 480px; box-shadow: 0 8px 40px rgba(0,0,0,0.12); }
+.google-signin-wrap { display: flex; justify-content: center; width: 100%; }
+.google-signin-wrap > div { width: 100% !important; }
 
 /* Dashboard */
 .dashboard-header { background: linear-gradient(135deg, var(--green), var(--green-light)); color: white; padding: 2rem; border-radius: var(--radius); margin-bottom: 2rem; }

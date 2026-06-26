@@ -3,20 +3,37 @@ from datetime import timedelta
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = 'django-insecure-farmgate-mango-direct-2026'
-DEBUG = True
-ALLOWED_HOSTS =  ["*",
-    "farmgate-backend.onrender.com",
-    "farmgate-frontend.onrender.com",
-    "farm-gate-mango.onrender.com",
-    "localhost",
-    "127.0.0.1",
-]
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://farm-gate-mango.onrender.com',
-    'https://farm-gate-mango-frontend.onrender.com',
-]
+try:
+    from dotenv import load_dotenv
+    load_dotenv(BASE_DIR / '.env')
+except ImportError:
+    pass
+
+
+def env_bool(name: str, default: bool = False) -> bool:
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.strip().lower() in ('1', 'true', 'yes', 'on')
+
+
+def env_list(name: str, default: str = '') -> list[str]:
+    raw = os.environ.get(name, default)
+    return [item.strip() for item in raw.split(',') if item.strip()]
+
+
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-farmgate-mango-direct-2026')
+DEBUG = env_bool('DEBUG', True)
+ALLOWED_HOSTS = env_list(
+    'ALLOWED_HOSTS',
+    '*,farmgate-backend.onrender.com,farmgate-frontend.onrender.com,farm-gate-mango.onrender.com,localhost,127.0.0.1',
+)
+
+CSRF_TRUSTED_ORIGINS = env_list(
+    'CSRF_TRUSTED_ORIGINS',
+    'https://farm-gate-mango.onrender.com,https://farm-gate-mango-frontend.onrender.com',
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -71,11 +88,12 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
 }
 
-CORS_ALLOWED_ORIGINS = [
-    'https://farm-gate-mango-frontend.onrender.com',
-    'http://localhost:5173',
-    'http://localhost:3000',
-]
+GOOGLE_OAUTH_CLIENT_ID = os.environ.get('GOOGLE_OAUTH_CLIENT_ID', '')
+
+CORS_ALLOWED_ORIGINS = env_list(
+    'CORS_ALLOWED_ORIGINS',
+    'https://farm-gate-mango-frontend.onrender.com,http://localhost:5173,http://localhost:3000',
+)
 
 TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True

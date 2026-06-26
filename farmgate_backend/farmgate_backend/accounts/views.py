@@ -9,11 +9,93 @@ from .serializers import (
     UserSerializer,
     FarmerRegistrationDataSerializer,
     FarmerVerifyOTPSerializer,
+    GoogleOAuthSerializer,
 )
 from .otp_utils import generate_otp, send_otp_sms
+from .oauth_utils import verify_google_token
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+def _unique_username(base: str) -> str:
+    username = base[:150]
+    if not User.objects.filter(username=username).exists():
+        return username
+    counter = 1
+    while True:
+        candidate = f'{base[:140]}{counter}'
+        if not User.objects.filter(username=candidate).exists():
+            return candidate
+        counter += 1
+
+
+def _auth_response(user):
+    refresh = RefreshToken.for_user(user)
+    return Response({
+        'user': UserSerializer(user).data,
+        'access': str(refresh.access_token),
+        'refresh': str(refresh),
+    })
+
+
+class GoogleOAuthView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = GoogleOAuthSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        try:
+            payload = verify_google_token(serializer.validated_data['credential'])
+        except ValueError as exc:
+            return Response({'error': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+
+        google_id = payload.get('sub')
+        email = (payload.get('email') or '').strip().lower()
+        if not google_id or not email:
+            return Response(
+                {'error': 'Google account must include a verified email.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if not payload.get('email_verified'):
+            return Response(
+                {'error': 'Please verify your Google email before signing in.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user = User.objects.filter(google_id=google_id).first()
+        if user:
+            return _auth_response(user)
+
+        user = User.objects.filter(email__iexact=email).first()
+        if user:
+            if user.google_id and user.google_id != google_id:
+                return Response(
+                    {'error': 'This email is linked to a different Google account.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            user.google_id = google_id
+            if not user.first_name and payload.get('given_name'):
+                user.first_name = payload['given_name']
+            if not user.last_name and payload.get('family_name'):
+                user.last_name = payload['family_name']
+            user.save()
+            return _auth_response(user)
+
+        base_username = email.split('@')[0].replace('.', '_')
+        user = User(
+            username=_unique_username(base_username),
+            email=email,
+            google_id=google_id,
+            first_name=payload.get('given_name', ''),
+            last_name=payload.get('family_name', ''),
+            role='customer',
+        )
+        user.set_unusable_password()
+        user.save()
+        return _auth_response(user)
+
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer

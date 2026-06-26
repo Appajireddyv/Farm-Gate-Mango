@@ -25,6 +25,7 @@ export const authAPI = {
   sendFarmerOTP: (data) => API.post('/auth/farmer/send-otp/', data),
   verifyFarmerOTP: (data) => API.post('/auth/farmer/verify-otp/', data),
   login: (data) => API.post('/auth/login/', data),
+  loginWithGoogle: (credential) => API.post('/auth/google/', { credential }),
   getProfile: () => API.get('/auth/profile/'),
   updateProfile: (data) => API.patch('/auth/profile/', data),
   getFarmers: () => API.get('/auth/farmers/'),
