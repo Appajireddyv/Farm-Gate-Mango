@@ -26,6 +26,13 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['customer', '-created_at']),
+            models.Index(fields=['farmer', '-created_at']),
+            models.Index(fields=['status', '-created_at']),
+        ]
+
     def __str__(self):
         return f"Order #{self.id} by {self.customer.username}"
 

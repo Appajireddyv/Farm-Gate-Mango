@@ -2,6 +2,8 @@ from pathlib import Path
 from datetime import timedelta
 import os
 
+from django.core.exceptions import ImproperlyConfigured
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 try:
@@ -23,8 +25,18 @@ def env_list(name: str, default: str = '') -> list[str]:
     return [item.strip() for item in raw.split(',') if item.strip()]
 
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-farmgate-mango-direct-2026')
 DEBUG = env_bool('DEBUG', True)
+
+_secret_key = os.environ.get('SECRET_KEY', '').strip()
+if not _secret_key:
+    if DEBUG:
+        _secret_key = 'django-insecure-dev-only-set-secret-key-in-env'
+    else:
+        raise ImproperlyConfigured(
+            'SECRET_KEY environment variable is required when DEBUG=False. '
+            'Generate one with: python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"'
+        )
+SECRET_KEY = _secret_key
 ALLOWED_HOSTS = env_list(
     'ALLOWED_HOSTS',
     '*,farmgate-backend.onrender.com,farmgate-frontend.onrender.com,farm-gate-mango.onrender.com,localhost,127.0.0.1',
@@ -65,12 +77,25 @@ ROOT_URLCONF = 'farmgate_backend.urls'
 TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates','DIRS': [],'APP_DIRS': True,'OPTIONS': {'context_processors': ['django.template.context_processors.debug','django.template.context_processors.request','django.contrib.auth.context_processors.auth','django.contrib.messages.context_processors.messages']}}]
 WSGI_APPLICATION = 'farmgate_backend.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+from farmgate_backend.database import get_databases
+
+DATABASES = get_databases(BASE_DIR)
+
+_redis_url = os.environ.get('REDIS_URL', '').strip()
+if _redis_url:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': _redis_url,
+            'OPTIONS': {'socket_connect_timeout': 5},
+        }
     }
-}
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
+    }
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -81,6 +106,16 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
+    'DEFAULT_THROTTLE_CLASSES': (
+        'farmgate_backend.throttling.IPAnonRateThrottle',
+        'farmgate_backend.throttling.UserRateThrottle',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': os.environ.get('THROTTLE_ANON', '100/hour'),
+        'user': os.environ.get('THROTTLE_USER', '1000/hour'),
+        'auth': os.environ.get('THROTTLE_AUTH', '10/minute'),
+    },
+    'EXCEPTION_HANDLER': 'farmgate_backend.exceptions.custom_exception_handler',
 }
 
 SIMPLE_JWT = {

@@ -5,6 +5,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
@@ -38,7 +39,9 @@ export default function App() {
       <AuthProvider>
         <CartProvider>
           <BrowserRouter>
+          <div className="app-layout">
           <Navbar />
+          <main className="app-main">
           <Toaster position="top-right" toastOptions={{ style: { fontFamily: 'Inter, sans-serif', borderRadius: '12px', fontSize: '0.9rem' } }} />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -55,6 +58,8 @@ export default function App() {
             <Route path="/farmer/products/edit/:id" element={<ProtectedRoute role="farmer"><AddProduct /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           </Routes>
+          </main>
+          <Footer />
           {showBackToTop && (
             <button
               type="button"
@@ -65,6 +70,7 @@ export default function App() {
               ↑ Top
             </button>
           )}
+          </div>
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>

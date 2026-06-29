@@ -1,0 +1,32 @@
+# Local PostgreSQL + Redis for development and load testing.
+# Start: docker compose up -d
+# Then set DB_HOST=localhost in .env and run: python manage.py migrate
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: farmgate
+      POSTGRES_USER: farmgate
+      POSTGRES_PASSWORD: farmgate
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U farmgate -d farmgate"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+volumes:
+  postgres_data:
+  redis_data:

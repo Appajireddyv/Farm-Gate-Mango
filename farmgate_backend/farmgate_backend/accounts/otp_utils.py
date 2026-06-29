@@ -25,8 +25,7 @@ def generate_otp():
 
 
 def send_otp_sms(phone, otp):
-    message = f'Your Farm 2 Door verification code is {otp}. Valid for 5 minutes.'
-    logger.info('OTP for %s: %s', phone, otp)
+    logger.info('OTP dispatched to %s', f'***{phone[-4:]}' if len(phone) >= 4 else '***')
     if getattr(settings, 'DEBUG', False):
         return {'debug_otp': otp}
     return {}

@@ -250,12 +250,6 @@ export default function Home() {
           </Link>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer style={{ background: '#1a1a2e', color: '#9ca3af', padding: '2rem', textAlign: 'center', fontSize: '0.9rem' }}>
-        <div style={{ marginBottom: '0.5rem' }}>🥭 <strong style={{ color: 'white' }}>Farm 2 Door</strong> — Farm to Table, No Middlemen</div>
-        <div>Made with ❤️ for Indian Farmers · {new Date().getFullYear()}</div>
-      </footer>
     </div>
   );
 }

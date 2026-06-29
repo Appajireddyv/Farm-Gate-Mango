@@ -3,9 +3,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db import transaction
 from .models import Order, OrderItem
-from .serializers import OrderSerializer, OrderCreateSerializer
+from .serializers import OrderSerializer, OrderCreateSerializer, OrderStatusUpdateSerializer
 from products.models import Product
 from accounts.models import User
+
 
 class PlaceOrderView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -13,24 +14,48 @@ class PlaceOrderView(APIView):
     @transaction.atomic
     def post(self, request):
         serializer = OrderCreateSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=400)
+        serializer.is_valid(raise_exception=True)
 
         data = serializer.validated_data
         items_data = data['items']
 
-        if not items_data:
-            return Response({'error': 'No items in order'}, status=400)
-
-        # Validate all products belong to same farmer
         product_ids = [item['product_id'] for item in items_data]
-        products = {p.id: p for p in Product.objects.filter(id__in=product_ids)}
+        products = {p.id: p for p in Product.objects.filter(id__in=product_ids, is_available=True)}
 
-        farmer_ids = set(p.farmer_id for p in products.values())
+        missing = [pid for pid in product_ids if pid not in products]
+        if missing:
+            return Response(
+                {'error': f'Products not found or unavailable: {missing}'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        farmer_ids = {p.farmer_id for p in products.values()}
         if len(farmer_ids) > 1:
-            return Response({'error': 'All items must be from the same farmer'}, status=400)
+            return Response(
+                {'error': 'All items must be from the same farmer'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        farmer = User.objects.get(id=list(farmer_ids)[0])
+        for item in items_data:
+            product = products[item['product_id']]
+            qty = item['quantity']
+            if qty < product.min_order_qty:
+                return Response(
+                    {
+                        'error': (
+                            f'Minimum order for {product.name} is '
+                            f'{product.min_order_qty} {product.unit}.'
+                        ),
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            if product.stock < qty:
+                return Response(
+                    {'error': f'Insufficient stock for {product.name}.'},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        farmer = User.objects.get(id=farmer_ids.pop())
         total = 0
 
         order = Order.objects.create(
@@ -63,7 +88,8 @@ class PlaceOrderView(APIView):
             order.payment_status = 'unpaid'
         order.save()
 
-        return Response(OrderSerializer(order).data, status=201)
+        return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+
 
 class CustomerOrdersView(generics.ListAPIView):
     serializer_class = OrderSerializer
@@ -72,6 +98,7 @@ class CustomerOrdersView(generics.ListAPIView):
     def get_queryset(self):
         return Order.objects.filter(customer=self.request.user).order_by('-created_at')
 
+
 class FarmerOrdersView(generics.ListAPIView):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -79,9 +106,11 @@ class FarmerOrdersView(generics.ListAPIView):
     def get_queryset(self):
         return Order.objects.filter(farmer=self.request.user).order_by('-created_at')
 
+
 class OrderDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ['get', 'patch', 'head', 'options']
 
     def get_queryset(self):
         user = self.request.user
@@ -91,11 +120,11 @@ class OrderDetailView(generics.RetrieveUpdateAPIView):
 
     def patch(self, request, *args, **kwargs):
         order = self.get_object()
-        new_status = request.data.get('status')
-        payment_status = request.data.get('payment_status')
-        if new_status:
-            order.status = new_status
-        if payment_status:
-            order.payment_status = payment_status
+        serializer = OrderStatusUpdateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        if 'status' in serializer.validated_data:
+            order.status = serializer.validated_data['status']
+        if 'payment_status' in serializer.validated_data:
+            order.payment_status = serializer.validated_data['payment_status']
         order.save()
         return Response(OrderSerializer(order).data)

@@ -20,6 +20,13 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['is_available', '-created_at']),
+            models.Index(fields=['category', 'is_available']),
+            models.Index(fields=['farmer', '-created_at']),
+        ]
+
     def __str__(self):
         return f"{self.name} by {self.farmer.username}"
 

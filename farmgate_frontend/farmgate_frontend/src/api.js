@@ -20,7 +20,13 @@ API.interceptors.request.use(config => {
 API.interceptors.response.use(
   response => response,
   error => {
-    if (error.response) {
+    if (error.response?.status === 429) {
+      const retryAfter = error.response.data?.retry_after_seconds;
+      const message = retryAfter
+        ? `Too many requests. Please wait ${retryAfter} seconds and try again.`
+        : 'Too many requests. Please try again later.';
+      error.message = message;
+    } else if (error.response) {
       console.error('API response error:', error.response.status, error.response.data);
     } else {
       console.error('API error:', error.message);

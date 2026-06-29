@@ -288,7 +288,7 @@ export function Register() {
               </div>
               <div className="form-group"><label className="form-label">State</label><input className="form-control" value={form.state} onChange={set('state')} placeholder="Maharashtra" /></div>
             </>}
-            <div className="form-group"><label className="form-label">Password</label><input className="form-control" type="password" value={form.password} onChange={set('password')} placeholder="Min 6 characters" required /></div>
+            <div className="form-group"><label className="form-label">Password</label><input className="form-control" type="password" value={form.password} onChange={set('password')} placeholder="Min 8 characters" minLength={8} required /></div>
             <button className="btn btn-primary" style={{ width: '100%', padding: '0.85rem', fontSize: '1rem' }} disabled={isAuthLoading}>
               {loading
                 ? (isFarmer ? 'Sending OTP...' : 'Creating account...')
