@@ -1,14 +1,17 @@
-"""Database configuration: PostgreSQL for production, SQLite fallback for local dev."""
+"""Database configuration: PostgreSQL for local development and production."""
 
 import os
 from pathlib import Path
-
-from django.core.exceptions import ImproperlyConfigured
 
 
 def _is_debug() -> bool:
     value = os.environ.get('DEBUG', 'true')
     return value.strip().lower() in ('1', 'true', 'yes', 'on')
+
+
+def _use_sqlite() -> bool:
+    value = os.environ.get('USE_SQLITE', '').strip().lower()
+    return value in ('1', 'true', 'yes', 'on')
 
 
 def get_databases(base_dir: Path) -> dict:
@@ -29,31 +32,24 @@ def get_databases(base_dir: Path) -> dict:
             options.setdefault('connect_timeout', 10)
         return {'default': config}
 
-    db_host = os.environ.get('DB_HOST', '').strip()
-    if db_host:
+    if _use_sqlite():
         return {
             'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'NAME': os.environ.get('DB_NAME', 'farmgate'),
-                'USER': os.environ.get('DB_USER', 'farmgate'),
-                'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-                'HOST': db_host,
-                'PORT': os.environ.get('DB_PORT', '5432'),
-                'CONN_MAX_AGE': conn_max_age,
-                'CONN_HEALTH_CHECKS': True,
-                'OPTIONS': {'connect_timeout': 10},
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': base_dir / 'db.sqlite3',
             }
         }
 
-    if not _is_debug():
-        raise ImproperlyConfigured(
-            'PostgreSQL is required when DEBUG=False. '
-            'Set DATABASE_URL (Render/Heroku) or DB_HOST, DB_NAME, DB_USER, DB_PASSWORD.'
-        )
-
     return {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': base_dir / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME', 'farmgate'),
+            'USER': os.environ.get('DB_USER', 'farmgate'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'farmgate'),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
+            'CONN_MAX_AGE': conn_max_age,
+            'CONN_HEALTH_CHECKS': True,
+            'OPTIONS': {'connect_timeout': 10},
         }
     }
