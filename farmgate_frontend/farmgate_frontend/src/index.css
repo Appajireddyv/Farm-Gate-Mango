@@ -281,8 +281,17 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .auth-loading-overlay { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; background: rgba(255, 255, 255, 0.92); border-radius: inherit; backdrop-filter: blur(2px); }
 .auth-loading-spinner { border: 3px solid var(--border); border-top-color: var(--green); border-radius: 50%; width: 44px; height: 44px; animation: spin 0.8s linear infinite; }
 .auth-loading-text { color: #374151; font-size: 0.95rem; font-weight: 600; margin: 0; }
-.google-signin-wrap { display: flex; justify-content: center; width: 100%; }
-.google-signin-wrap > div { width: 100% !important; }
+.google-signin-wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 1rem;
+}
+.google-signin-wrap > div {
+  width: 100% !important;
+  max-width: 360px !important;
+}
 
 /* Dashboard */
 .dashboard-header { background: linear-gradient(135deg, var(--green), var(--green-light)); color: white; padding: 2rem; border-radius: var(--radius); margin-bottom: 2rem; }
