@@ -575,3 +575,338 @@ img, svg { max-width: 100%; height: auto; display: block; }
     text-align: center;
   }
 }
+
+/* FarmGate AI Assistant */
+.fgai-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 26, 46, 0.25);
+  z-index: 200;
+  backdrop-filter: blur(2px);
+}
+
+.fgai-fab {
+  position: fixed;
+  right: 1rem;
+  bottom: 1.25rem;
+  z-index: 210;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.1rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 8px 32px rgba(45, 106, 79, 0.35);
+  transition: transform 0.2s ease, opacity 0.2s ease, bottom 0.2s ease;
+  font-family: inherit;
+}
+.fgai-fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(45, 106, 79, 0.4);
+}
+.fgai-fab-stacked { bottom: 5rem; }
+.fgai-fab-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+}
+.fgai-fab-icon { font-size: 1.25rem; line-height: 1; }
+.fgai-fab-label { white-space: nowrap; }
+
+.fgai-panel {
+  position: fixed;
+  right: 1rem;
+  bottom: 1.25rem;
+  width: 400px;
+  max-width: calc(100vw - 2rem);
+  height: 580px;
+  max-height: calc(100vh - 2rem);
+  z-index: 220;
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(45, 106, 79, 0.08);
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px) scale(0.95);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.fgai-panel-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.fgai-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.1rem;
+  background: linear-gradient(135deg, var(--green) 0%, #1b4332 100%);
+  color: white;
+  flex-shrink: 0;
+}
+.fgai-header-info {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.fgai-header-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 0.35rem 0.45rem;
+}
+.fgai-header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.fgai-header-sub {
+  font-size: 0.72rem;
+  opacity: 0.85;
+  margin-top: 0.1rem;
+}
+.fgai-header-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+.fgai-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.fgai-icon-btn:hover { background: rgba(255, 255, 255, 0.22); }
+
+.fgai-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background: var(--cream);
+  scroll-behavior: smooth;
+}
+
+.fgai-msg {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 92%;
+}
+.fgai-msg-user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+.fgai-msg-ai { align-self: flex-start; }
+
+.fgai-msg-avatar {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: var(--green-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+.fgai-msg-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.fgai-msg-text {
+  padding: 0.7rem 0.9rem;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  word-break: break-word;
+}
+.fgai-msg-ai .fgai-msg-text {
+  background: var(--white);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+.fgai-msg-user .fgai-msg-text {
+  background: var(--green);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.fgai-msg-actions,
+.fgai-msg-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.fgai-action-btn {
+  padding: 0.35rem 0.7rem;
+  border: 1.5px solid var(--green);
+  border-radius: 50px;
+  background: white;
+  color: var(--green);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.fgai-action-btn:hover {
+  background: var(--green);
+  color: white;
+}
+.fgai-link-btn {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--green-light);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: inherit;
+}
+.fgai-link-btn:hover { color: var(--green); }
+
+.fgai-typing {
+  display: flex;
+  gap: 4px;
+  padding: 0.85rem 1rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  border-bottom-left-radius: 4px;
+}
+.fgai-typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green-light);
+  animation: fgai-bounce 1.2s infinite ease-in-out;
+}
+.fgai-typing span:nth-child(2) { animation-delay: 0.15s; }
+.fgai-typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes fgai-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+
+.fgai-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0 1rem 0.75rem;
+  background: var(--cream);
+  flex-shrink: 0;
+}
+.fgai-quick-btn {
+  padding: 0.4rem 0.75rem;
+  border: 1.5px solid var(--border);
+  border-radius: 50px;
+  background: white;
+  color: var(--text);
+  font-size: 0.76rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.fgai-quick-btn:hover {
+  border-color: var(--green);
+  color: var(--green);
+  background: var(--green-pale);
+}
+
+.fgai-input-area {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.fgai-input {
+  flex: 1;
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  background: var(--cream);
+}
+.fgai-input:focus {
+  border-color: var(--green-light);
+  background: white;
+}
+.fgai-input:disabled { opacity: 0.6; }
+.fgai-send-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 12px;
+  background: var(--green);
+  color: white;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+  flex-shrink: 0;
+}
+.fgai-send-btn:hover:not(:disabled) { background: var(--green-light); }
+.fgai-send-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.fgai-footer-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.45rem;
+  background: var(--white);
+  font-size: 0.68rem;
+  color: var(--text-light);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .fgai-fab {
+    right: 0.75rem;
+    bottom: 1rem;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.82rem;
+  }
+  .fgai-fab-stacked { bottom: 4.5rem; }
+  .fgai-fab-label { display: none; }
+  .fgai-panel {
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+  }
+  .fgai-quick-actions { padding-bottom: 0.5rem; }
+}

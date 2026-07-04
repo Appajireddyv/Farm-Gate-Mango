@@ -15,6 +15,7 @@ import Orders, { OrderDetail } from './pages/Orders';
 import FarmerDashboard from './pages/FarmerDashboard';
 import AddProduct from './pages/AddProduct';
 import Profile from './pages/Profile';
+import FarmGateAI from './components/FarmGateAI';
 
 function ProtectedRoute({ children, role }) {
   const { user, loading } = useAuth();
@@ -70,6 +71,7 @@ export default function App() {
               ↑ Top
             </button>
           )}
+          <FarmGateAI showBackToTop={showBackToTop} />
           </div>
         </BrowserRouter>
       </CartProvider>
