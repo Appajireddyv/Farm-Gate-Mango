@@ -62,8 +62,8 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .nav-icon-link { position: relative; display: inline-flex; align-items: center; gap: 0.35rem; color: inherit; }
 .nav-links a,
 .nav-links button { text-decoration: none; color: var(--text); font-weight: 500; transition: color 0.2s; font-size: 0.95rem; background: none; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; }
-.nav-links a:hover,
-.nav-links button:hover { color: var(--green); }
+.nav-links a:hover { color: var(--green); }
+.nav-links button:not(.btn):hover { color: var(--green); }
 .nav-links.open { display: flex; }
 
 /* Global responsive helpers */
@@ -156,16 +156,23 @@ img, svg { max-width: 100%; height: auto; display: block; }
 }
 
 /* Buttons */
-.btn { padding: 0.6rem 1.4rem; border: none; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+.btn { padding: 0.6rem 1.4rem; border: none; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; outline: none; }
 .btn-primary { background: var(--green); color: white; }
 .btn-primary:hover { background: var(--green-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(45,106,79,0.3); }
+.btn-primary:active { background: var(--green); color: white; transform: translateY(0); }
+.btn-primary.btn-sm { background: var(--green); color: white; }
+.btn-primary.btn-sm:hover { background: var(--green-light); }
+.btn-primary.btn-sm:active { background: var(--green); color: white; }
 .btn-secondary { background: transparent; border: 2px solid var(--green); color: var(--green); }
-.btn-secondary:hover { background: var(--green); color: white; }
+.btn-secondary:hover { background: var(--green); color: white; box-shadow: 0 2px 12px rgba(45,106,79,0.2); }
+.btn-secondary:active { background: var(--green); color: white; }
 .btn-amber { background: var(--amber); color: white; }
 .btn-amber:hover { background: var(--amber-dark); }
+.btn-amber:active { background: var(--amber); }
 .btn-sm { padding: 0.4rem 1rem; font-size: 0.82rem; }
 .btn-danger { background: #ef4444; color: white; }
 .btn-danger:hover { background: #dc2626; }
+.btn-danger:active { background: #ef4444; }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
 /* Cards */
@@ -576,7 +583,7 @@ img, svg { max-width: 100%; height: auto; display: block; }
   }
 }
 
-/* FarmGate AI Assistant */
+/* farm2door AI Assistant */
 .fgai-overlay {
   position: fixed;
   inset: 0;

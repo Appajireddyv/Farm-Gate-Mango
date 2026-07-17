@@ -18,6 +18,7 @@ class FarmerRegistrationDataSerializer(StrictSerializer):
     village = serializers.CharField(max_length=100, required=False, allow_blank=True, default='')
     district = serializers.CharField(max_length=100, required=False, allow_blank=True, default='')
     state = serializers.CharField(max_length=100, required=False, allow_blank=True, default='')
+    role = serializers.CharField(required=False, write_only=True)
 
     def validate(self, attrs):
         return strip_string_fields(attrs)
@@ -43,6 +44,7 @@ class FarmerRegistrationDataSerializer(StrictSerializer):
 class FarmerVerifyOTPSerializer(StrictSerializer):
     phone = serializers.CharField(max_length=15)
     otp = serializers.CharField(min_length=6, max_length=6)
+    role = serializers.CharField(required=False, write_only=True)
 
     def validate_phone(self, value):
         phone = re.sub(r'\D', '', value)[-10:]

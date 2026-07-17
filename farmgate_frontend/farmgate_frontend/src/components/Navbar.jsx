@@ -24,22 +24,24 @@ export default function Navbar() {
         {menuOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
       <div className={`nav-links${menuOpen ? ' open' : ''}`}>
+        <Link to="/products" onClick={() => setMenuOpen(false)}>Shop</Link>
         {(!user || user.role === 'customer') && (
-          <Link to="/products" onClick={() => setMenuOpen(false)}>Shop</Link>
+          <>
+            {!user && <>
+              <Link to="/login" onClick={() => setMenuOpen(false)}>Login</Link>
+              <Link to="/register" className="btn btn-primary btn-sm" onClick={() => setMenuOpen(false)}>Join Free</Link>
+            </>}
+            {user && user.role === 'customer' && <>
+              <Link to="/cart" className="nav-icon-link" onClick={() => setMenuOpen(false)}>
+                <ShoppingCart size={20} />
+                {itemCount > 0 && <span className="cart-badge">{itemCount}</span>}
+              </Link>
+              <Link to="/orders" onClick={() => setMenuOpen(false)}>My Orders</Link>
+              <Link to="/profile" onClick={() => setMenuOpen(false)}><User size={18} /></Link>
+              <button onClick={() => { setMenuOpen(false); handleLogout(); }} className="btn btn-sm btn-secondary"><LogOut size={14} /> Logout</button>
+            </>}
+          </>
         )}
-        {!user && <>
-          <Link to="/login" onClick={() => setMenuOpen(false)}>Login</Link>
-          <Link to="/register" className="btn btn-primary btn-sm" onClick={() => setMenuOpen(false)}>Join Free</Link>
-        </>}
-        {user && user.role === 'customer' && <>
-          <Link to="/cart" className="nav-icon-link" onClick={() => setMenuOpen(false)}>
-            <ShoppingCart size={20} />
-            {itemCount > 0 && <span className="cart-badge">{itemCount}</span>}
-          </Link>
-          <Link to="/orders" onClick={() => setMenuOpen(false)}>My Orders</Link>
-          <Link to="/profile" onClick={() => setMenuOpen(false)}><User size={18} /></Link>
-          <button onClick={() => { setMenuOpen(false); handleLogout(); }} className="btn btn-sm btn-secondary"><LogOut size={14} /> Logout</button>
-        </>}
         {user && user.role === 'farmer' && <>
           <Link to="/farmer/dashboard" onClick={() => setMenuOpen(false)}><LayoutDashboard size={18} /></Link>
           <Link to="/farmer/products" onClick={() => setMenuOpen(false)}><Package size={18} /></Link>

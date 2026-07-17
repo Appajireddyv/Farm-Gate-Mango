@@ -169,6 +169,7 @@ class FarmerVerifyOTPView(APIView):
 
         data = dict(otp_record.registration_data)
         password = data.pop('password')
+        data.pop('role', None)  # Remove role if present, as we're setting it explicitly
         user = User(role='farmer', is_verified=True, **data)
         user.set_password(password)
         user.save()

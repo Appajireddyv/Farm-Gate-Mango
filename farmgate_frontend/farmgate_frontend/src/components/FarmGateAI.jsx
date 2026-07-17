@@ -151,6 +151,8 @@ export default function FarmGateAI({ showBackToTop }) {
 
   const handleAction = useCallback((action) => {
     if (action.type === 'navigate') {
+      // Set flag to trigger auto-scroll on destination page
+      sessionStorage.setItem('scrollFromAI', 'true');
       navigate(action.value);
       setOpen(false);
     } else if (action.type === 'send') {
@@ -175,12 +177,12 @@ export default function FarmGateAI({ showBackToTop }) {
         <div className="fgai-overlay" onClick={() => setOpen(false)} aria-hidden="true" />
       )}
 
-      <div className={`fgai-panel ${open ? 'fgai-panel-open' : ''}`} role="dialog" aria-label="FarmGate AI chat">
+      <div className={`fgai-panel ${open ? 'fgai-panel-open' : ''}`} role="dialog" aria-label="farm2door AI chat">
         <div className="fgai-header">
           <div className="fgai-header-info">
             <span className="fgai-header-icon">🌱</span>
             <div>
-              <div className="fgai-header-title">FarmGate AI</div>
+              <div className="fgai-header-title">farm2door AI</div>
               <div className="fgai-header-sub">Smart shopping & farming assistant</div>
             </div>
           </div>
@@ -256,11 +258,11 @@ export default function FarmGateAI({ showBackToTop }) {
         type="button"
         className={`fgai-fab ${open ? 'fgai-fab-hidden' : ''} ${showBackToTop ? 'fgai-fab-stacked' : ''}`}
         onClick={() => setOpen(true)}
-        aria-label="Open FarmGate AI assistant"
-        title="FarmGate AI"
+        aria-label="Open farm2door AI assistant"
+        title="farm2door AI"
       >
         <span className="fgai-fab-icon">🌱</span>
-        <span className="fgai-fab-label">FarmGate AI</span>
+        <span className="fgai-fab-label">farm2door AI</span>
       </button>
     </>
   );

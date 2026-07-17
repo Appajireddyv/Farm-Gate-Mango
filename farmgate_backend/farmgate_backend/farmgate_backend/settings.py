@@ -127,7 +127,7 @@ GOOGLE_OAUTH_CLIENT_ID = os.environ.get('GOOGLE_OAUTH_CLIENT_ID', '')
 
 CORS_ALLOWED_ORIGINS = env_list(
     'CORS_ALLOWED_ORIGINS',
-    'https://farm-gate-mango-frontend.onrender.com,http://localhost:5173,http://localhost:3000',
+    'https://farm-gate-mango.onrender.com,https://farm-gate-mango-frontend.onrender.com,https://farmgate-frontend.onrender.com,http://localhost:5173,http://localhost:3000',
 )
 
 TIME_ZONE = 'Asia/Kolkata'

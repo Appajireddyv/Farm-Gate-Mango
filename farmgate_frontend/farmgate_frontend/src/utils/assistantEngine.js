@@ -59,7 +59,7 @@ const FAQ_KB = [
   },
   {
     keys: ['contact', 'support', 'help', 'customer'],
-    answer: 'Need human support? Visit your Profile page or email support@farmgate.in. FarmGate AI can handle shopping, orders, and farming tips instantly!',
+    answer: 'Need human support? Visit your Profile page or email support@farmgate.in. farm2door AI can handle shopping, orders, and farming tips instantly!',
   },
   {
     keys: ['farmer', 'sell', 'list', 'register farmer'],
@@ -339,7 +339,7 @@ function handleFutureFeatures(text) {
   }
   if (/voice|speak|talk|microphone|mic|audio/.test(t)) {
     return {
-      text: '🎤 **Voice interaction** is on our roadmap! Soon you\'ll be able to talk to FarmGate AI hands-free while shopping or farming.',
+      text: '🎤 **Voice interaction** is on our roadmap! Soon you\'ll be able to talk to farm2door AI hands-free while shopping or farming.',
     };
   }
   return null;
@@ -361,7 +361,7 @@ export const QUICK_ACTIONS = [
 ];
 
 export const WELCOME_MESSAGE = {
-  text: 'Hi! I\'m **🌱 FarmGate AI** — your smart shopping and farming assistant.\n\nI can help you find mangoes, get personalized recommendations, track orders, manage your cart, and answer farming questions.\n\nWhat would you like to do today?',
+  text: 'Hi! I\'m **🌱 farm2door AI** — your smart shopping and farming assistant.\n\nI can help you find mangoes, get personalized recommendations, track orders, manage your cart, and answer farming questions.\n\nWhat would you like to do today?',
 };
 
 export async function processMessage(text, context) {
@@ -376,7 +376,7 @@ export async function processMessage(text, context) {
   if (handleGreeting(text)) {
     const name = user?.first_name || user?.username;
     return {
-      text: `Hello${name ? ` ${name}` : ''}! 👋 I'm FarmGate AI. Ask me to find mangoes, recommend varieties, check your orders, or share farming tips.`,
+      text: `Hello${name ? ` ${name}` : ''}! 👋 I'm farm2door AI. Ask me to find mangoes, recommend varieties, check your orders, or share farming tips.`,
       actions: QUICK_ACTIONS.slice(0, 4).map(a => ({ label: a.label, type: 'send', value: a.message })),
     };
   }

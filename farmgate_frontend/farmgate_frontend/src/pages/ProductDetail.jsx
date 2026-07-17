@@ -29,6 +29,16 @@ export default function ProductDetail() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  // Auto-scroll when navigating from AI assistant
+  useEffect(() => {
+    if (!loading && sessionStorage.getItem('scrollFromAI')) {
+      sessionStorage.removeItem('scrollFromAI');
+      setTimeout(() => {
+        window.scrollTo({ top: document.body.scrollHeight * 0.4, behavior: 'smooth' });
+      }, 100);
+    }
+  }, [loading]);
+
   const handleAddToCart = () => {
     if (!user) { navigate('/login'); return; }
     addToCart(product, qty);

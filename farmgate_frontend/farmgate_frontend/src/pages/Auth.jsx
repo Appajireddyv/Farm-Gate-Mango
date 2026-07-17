@@ -150,7 +150,8 @@ export function Register() {
     setError('');
     setInfo('');
     try {
-      const res = await sendFarmerOTP(form);
+      const { role, ...otpData } = form;
+      const res = await sendFarmerOTP(otpData);
       setStep(2);
       const debugHint = res.data.debug_otp ? ` (Dev OTP: ${res.data.debug_otp})` : '';
       setInfo(`OTP sent to ${form.phone}.${debugHint}`);

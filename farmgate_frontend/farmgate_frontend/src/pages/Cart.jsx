@@ -1,6 +1,6 @@
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ordersAPI, resolveMediaUrl } from '../api';
 import { Trash2, Minus, Plus, ShoppingBag } from 'lucide-react';
@@ -13,6 +13,16 @@ export default function Cart() {
   const [showCheckout, setShowCheckout] = useState(false);
   const [form, setForm] = useState({ delivery_address: '', delivery_pincode: '', payment_method: 'cod', notes: '' });
   const [placing, setPlacing] = useState(false);
+
+  // Auto-scroll when navigating from AI assistant
+  useEffect(() => {
+    if (sessionStorage.getItem('scrollFromAI')) {
+      sessionStorage.removeItem('scrollFromAI');
+      setTimeout(() => {
+        window.scrollTo({ top: document.body.scrollHeight * 0.4, behavior: 'smooth' });
+      }, 100);
+    }
+  }, []);
 
   if (cart.length === 0) return (
     <div className="container section">

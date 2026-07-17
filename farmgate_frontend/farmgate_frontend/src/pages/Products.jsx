@@ -16,6 +16,16 @@ export default function Products() {
     setSearch(query.get('search') || '');
   }, [location.search]);
 
+  // Auto-scroll when navigating from AI assistant
+  useEffect(() => {
+    if (!loading && sessionStorage.getItem('scrollFromAI')) {
+      sessionStorage.removeItem('scrollFromAI');
+      setTimeout(() => {
+        window.scrollTo({ top: document.body.scrollHeight * 0.3, behavior: 'smooth' });
+      }, 100);
+    }
+  }, [loading]);
+
   useEffect(() => {
     productsAPI.list({ category: category || undefined })
       .then(res => setProducts(res.data))
