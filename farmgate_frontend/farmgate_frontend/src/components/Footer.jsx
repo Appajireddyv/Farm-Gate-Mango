@@ -111,7 +111,7 @@ export default function Footer() {
               </li>
               <li>
                 <Phone size={16} aria-hidden="true" />
-                <a href="tel:+919876543210">+91 74833 24384</a>
+                <a href="tel:+917483324384">+91 7483324384</a>
               </li>
               <li>
                 <MapPin size={16} aria-hidden="true" />
