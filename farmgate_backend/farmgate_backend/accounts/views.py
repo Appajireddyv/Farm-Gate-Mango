@@ -122,6 +122,7 @@ class FarmerSendOTPView(APIView):
         serializer = FarmerRegistrationDataSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         phone = serializer.validated_data['phone']
+        email = serializer.validated_data.get('email', '')
         otp = generate_otp()
 
         RegistrationOTP.objects.filter(phone=phone, is_used=False).update(is_used=True)
@@ -131,7 +132,7 @@ class FarmerSendOTPView(APIView):
             registration_data=serializer.validated_data,
         )
 
-        extra = send_otp_sms(phone, otp)
+        extra = send_otp_sms(phone, otp, email=email)
         response = {
             'message': 'OTP sent to your mobile number.',
             'phone': phone,
