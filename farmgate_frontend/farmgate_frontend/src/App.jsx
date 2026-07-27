@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -16,6 +16,16 @@ import FarmerDashboard from './pages/FarmerDashboard';
 import AddProduct from './pages/AddProduct';
 import Profile from './pages/Profile';
 import FarmGateAI from './components/FarmGateAI';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, [pathname]);
+
+  return null;
+}
 
 function ProtectedRoute({ children, role }) {
   const { user, loading } = useAuth();
@@ -43,6 +53,7 @@ export default function App() {
           <div className="app-layout">
           <Navbar />
           <main className="app-main">
+          <ScrollToTop />
           <Toaster position="top-right" toastOptions={{ style: { fontFamily: 'Inter, sans-serif', borderRadius: '12px', fontSize: '0.9rem' } }} />
           <Routes>
             <Route path="/" element={<Home />} />

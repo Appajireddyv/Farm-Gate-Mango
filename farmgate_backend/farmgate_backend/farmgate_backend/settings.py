@@ -111,9 +111,9 @@ REST_FRAMEWORK = {
         'farmgate_backend.throttling.UserRateThrottle',
     ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon': os.environ.get('THROTTLE_ANON', '100/hour'),
-        'user': os.environ.get('THROTTLE_USER', '1000/hour'),
-        'auth': os.environ.get('THROTTLE_AUTH', '10/minute'),
+        'anon': os.environ.get('THROTTLE_ANON', '500/hour'),
+        'user': os.environ.get('THROTTLE_USER', '2000/hour'),
+        'auth': os.environ.get('THROTTLE_AUTH', '100/minute'),
     },
     'EXCEPTION_HANDLER': 'farmgate_backend.exceptions.custom_exception_handler',
 }

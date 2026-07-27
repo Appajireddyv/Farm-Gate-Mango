@@ -7,6 +7,11 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const clearAuthSession = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+  };
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -17,6 +22,20 @@ export function AuthProvider({ children }) {
     } else {
       setLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    const handleSessionEnd = () => {
+      clearAuthSession();
+    };
+
+    window.addEventListener('beforeunload', handleSessionEnd);
+    window.addEventListener('pagehide', handleSessionEnd);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleSessionEnd);
+      window.removeEventListener('pagehide', handleSessionEnd);
+    };
   }, []);
 
   const login = async (username, password) => {
@@ -50,8 +69,7 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
+    clearAuthSession();
   };
 
   return (

@@ -1,7 +1,18 @@
+from django.conf import settings
 from django.core import mail
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, TestCase, override_settings
 
 from .otp_utils import send_otp_sms
+
+
+class LoadConfigurationTests(SimpleTestCase):
+    def test_throttle_defaults_allow_large_burst_requests(self):
+        rates = settings.REST_FRAMEWORK['DEFAULT_THROTTLE_RATES']
+        anon_rate = int(rates['anon'].split('/')[0])
+        user_rate = int(rates['user'].split('/')[0])
+
+        self.assertGreaterEqual(anon_rate, 100)
+        self.assertGreaterEqual(user_rate, 100)
 
 
 class OTPUtilsTests(TestCase):
