@@ -65,15 +65,17 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="footer-col">
-            <h3 className="footer-heading">Shop</h3>
-            <ul className="footer-links">
-              <li><FooterLink to="/products">All Mangoes</FooterLink></li>
-              <li><FooterLink to="/products?category=alphonso">Alphonso</FooterLink></li>
-              <li><FooterLink to="/products?category=kesar">Kesar</FooterLink></li>
-              <li><FooterLink to="/products?category=dasheri">Dasheri</FooterLink></li>
-            </ul>
-          </div>
+          {!isFarmer && (
+            <div className="footer-col">
+              <h3 className="footer-heading">Shop</h3>
+              <ul className="footer-links">
+                <li><FooterLink to="/products">All Mangoes</FooterLink></li>
+                <li><FooterLink to="/products?category=alphonso">Alphonso</FooterLink></li>
+                <li><FooterLink to="/products?category=kesar">Kesar</FooterLink></li>
+                <li><FooterLink to="/products?category=dasheri">Dasheri</FooterLink></li>
+              </ul>
+            </div>
+          )}
 
           <div className="footer-col">
             <h3 className="footer-heading">Account</h3>
