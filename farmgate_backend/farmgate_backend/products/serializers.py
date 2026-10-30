@@ -67,10 +67,8 @@ class ProductSerializer(StrictModelSerializer):
         return f"{obj.farmer.village}, {obj.farmer.district}" if obj.farmer.village else ""
 
     def get_avg_rating(self, obj):
-        reviews = obj.reviews.all()
-        if reviews.exists():
-            return round(sum(r.rating for r in reviews) / reviews.count(), 1)
-        return None
+        ratings = [review.rating for review in obj.reviews.all()]
+        return round(sum(ratings) / len(ratings), 1) if ratings else None
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

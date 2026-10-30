@@ -29,7 +29,7 @@ class ProductListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsFarmerOrReadOnly]
 
     def get_queryset(self):
-        qs = Product.objects.filter(is_available=True)
+        qs = Product.objects.filter(is_available=True).select_related('farmer').prefetch_related('reviews__customer')
         category = self.request.query_params.get('category')
         farmer_id = self.request.query_params.get('farmer')
         if category is not None:
@@ -53,7 +53,9 @@ class ProductListCreateView(generics.ListCreateAPIView):
 class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer
     permission_classes = [IsFarmerOrReadOnly, IsProductOwnerOrReadOnly]
-    queryset = Product.objects.all()
+
+    def get_queryset(self):
+        return Product.objects.select_related('farmer').prefetch_related('reviews__customer')
 
 
 class FarmerProductsView(generics.ListAPIView):
@@ -61,7 +63,9 @@ class FarmerProductsView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Product.objects.filter(farmer=self.request.user).order_by('-created_at')
+        return Product.objects.filter(farmer=self.request.user).select_related(
+            'farmer',
+        ).prefetch_related('reviews__customer').order_by('-created_at')
 
 
 class ReviewCreateView(generics.CreateAPIView):

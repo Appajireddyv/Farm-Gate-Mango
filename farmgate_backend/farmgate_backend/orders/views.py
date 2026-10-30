@@ -20,7 +20,13 @@ class PlaceOrderView(APIView):
         items_data = data['items']
 
         product_ids = [item['product_id'] for item in items_data]
-        products = {p.id: p for p in Product.objects.filter(id__in=product_ids, is_available=True)}
+        products = {
+            product.id: product
+            for product in Product.objects.select_for_update().filter(
+                id__in=product_ids,
+                is_available=True,
+            )
+        }
 
         missing = [pid for pid in product_ids if pid not in products]
         if missing:
@@ -96,7 +102,9 @@ class CustomerOrdersView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Order.objects.filter(customer=self.request.user).order_by('-created_at')
+        return Order.objects.filter(customer=self.request.user).select_related(
+            'customer', 'farmer',
+        ).prefetch_related('items').order_by('-created_at')
 
 
 class FarmerOrdersView(generics.ListAPIView):
@@ -104,7 +112,9 @@ class FarmerOrdersView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Order.objects.filter(farmer=self.request.user).order_by('-created_at')
+        return Order.objects.filter(farmer=self.request.user).select_related(
+            'customer', 'farmer',
+        ).prefetch_related('items').order_by('-created_at')
 
 
 class OrderDetailView(generics.RetrieveUpdateAPIView):
@@ -115,8 +125,10 @@ class OrderDetailView(generics.RetrieveUpdateAPIView):
     def get_queryset(self):
         user = self.request.user
         if user.role == 'farmer':
-            return Order.objects.filter(farmer=user)
-        return Order.objects.filter(customer=user)
+            queryset = Order.objects.filter(farmer=user)
+        else:
+            queryset = Order.objects.filter(customer=user)
+        return queryset.select_related('customer', 'farmer').prefetch_related('items')
 
     def patch(self, request, *args, **kwargs):
         order = self.get_object()
